@@ -1,17 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { protect, authorize } = require("../middlewares/authMiddleware"); // Importamos correctamente protect y authorize
 const authController = require("../controllers/authController");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 
-// Ruta para registrar un usuario (no necesita autenticación)
+// POST /api/auth/register (como en Gaby)
 router.post("/register", authController.register);
 
-// Ruta para hacer login de un usuario (no necesita autenticación)
+// POST /api/auth/login (como en Gaby)
 router.post("/login", authController.login);
 
-// Ruta protegida que solo puede ser accedida por un administrador
+// GET /api/auth/admin → Ruta protegida solo para admin
 router.get("/admin", protect, authorize(["admin"]), (req, res) => {
-  res.status(200).json({ message: "Bienvenido, admin!" });
+  res.json({ message: "Bienvenido, administrador" });
 });
 
 module.exports = router;

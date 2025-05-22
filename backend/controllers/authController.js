@@ -1,57 +1,60 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Corrección: Importar correctamente el modelo User
+const bcrypt = require("bcryptjs");  // Importa bcrypt para hashear contraseñas.
+const jwt = require("jsonwebtoken");  // Importa jsonwebtoken para generar tokens JWT.
+const User = require("../models/User");  // Importa el modelo de Usuario.
+
+// Controlador para el registro de usuarios
+// req es el objeto que contiene la información de la petición HTTP (por ejemplo, los datos enviados por el cliente).
+// res es el objeto que se utiliza para enviar la respuesta HTTP al cliente.
 
 exports.register = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password } = req.body; // No recibir "role" desde el frontend
+  const role = "artist"; // Rol fijo
 
-  try {
-    // Verificar si el usuario ya existe
-    User.findByUsername(username, async (err, existingUser) => {
-      if (err) return res.status(500).json({ message: "Error en el servidor" });
-      if (existingUser) return res.status(400).json({ message: "Usuario ya existe" });
+  User.findByUsername(username, async (err, existingUser) => {
+    if (existingUser) {
+      return res.status(400).json({ error: "El usuario ya existe" });
+    }
 
-      // Encriptar la contraseña
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Crear el usuario
-      User.create(username, hashedPassword, role, (err, result) => {
-        if (err) return res.status(500).json({ message: "Error al crear el usuario" });
-        res.status(201).json({ message: "Usuario registrado con éxito" });
-      });
-
+    User.create(username, password, role, (err, result) => { // Siempre "artist"
+      if (err) return res.status(500).json({ error: "Error al registrar" });
+      res.status(201).json({ message: "Artista registrado exitosamente" });
     });
-  } catch (error) {
-    res.status(500).json({ message: "Error en el servidor", error });
-  }
+  });
 };
 
+// Login (idéntico a Gaby, pero con rol en JWT)
 exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Buscar el usuario por nombre de usuario
     User.findByUsername(username, async (err, user) => {
-      if (err) return res.status(500).json({ message: "Error en el servidor" });
-      if (!user) return res.status(400).json({ message: "Credenciales incorrectas" });
+      if (!user) return res.status(400).json({ error: "Credenciales inválidas" });
 
-      // Comparar la contraseña
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ message: "Credenciales incorrectas" });
+      if (!isMatch) return res.status(400).json({ error: "Credenciales inválidas" });
 
-      // Generar el token JWT
+      // Generar JWT (como Gaby, pero + rol)
       const token = jwt.sign(
-        { id: user.id, role: user.role },
-        process.env.JWT_SECRET, // Usar clave secreta desde .env
-        { expiresIn: "3h" }
+        { id: user.id, username: user.username, role: user.role }, // Payload
+        process.env.JWT_SECRET, // Clave secreta (usa la misma que Gaby)
+        { expiresIn: "1h" } // Expiración
       );
 
-      res.status(200).json({
-        message: "Login exitoso",
-        token,
-      });
+      res.json({ token, role: user.role }); // Enviar token y rol
     });
   } catch (error) {
-    res.status(500).json({ message: "Error en el servidor", error });
+    res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
+/**
+ * Importa la librería bcryptjs y la asigna a la constante bcrypt.
+bcryptjs se utiliza para hashear las contraseñas antes de almacenarlas en la base de datos y para comparar las contraseñas durante el inicio de sesión. Importante: Aunque el modelo ahora hashea la contraseña, bcrypt sigue siendo necesario aquí para la comparación en el login.
+
+
+
+const jwt = require("jsonwebtoken");:
+Importa la librería jsonwebtoken y la asigna a la constante jwt.
+jsonwebtoken se utiliza para generar y verificar JSON Web Tokens (JWTs). Los JWTs se utilizan para la autenticación sin estado.
+ 
+ */

@@ -1,23 +1,77 @@
-const db = require('./db'); // Conexión a la base de datos
+const db = require("./db");  // Importa la conexión a la base de datos.
+const bcrypt = require("bcryptjs");  // Importa bcrypt para hashear contraseñas.
 
 const User = {
-  // Buscar un usuario por nombre de usuario
+  // Busca un usuario por su username (para login)
   findByUsername: (username, callback) => {
-    const query = 'SELECT * FROM users WHERE username = ?';
+    const query = "SELECT * FROM users WHERE username = ?";
     db.query(query, [username], (err, results) => {
       if (err) return callback(err, null);
-      callback(null, results[0]); // Retorna el primer usuario encontrado
+      callback(null, results[0]); // Retorna el primer usuario encontrado o null
     });
   },
 
-  // Crear un nuevo usuario
-  create: (username, password, role, callback) => {
-    const query = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
-    db.query(query, [username, password, role], (err, results) => {
+  // Crea un usuario (hashea la contraseña antes de guardar)
+  create: (username, plainPassword, role, callback) => {
+    const saltRounds = 10; // Coste del hasheo (balance entre seguridad y rendimiento)
+    bcrypt.hash(plainPassword, saltRounds, (err, hashedPassword) => {
       if (err) return callback(err, null);
-      callback(null, results);
+      
+      const query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+      db.query(query, [username, hashedPassword, role], (err, result) => {
+        if (err) return callback(err, null);
+        callback(null, result);
+      });
     });
-  }
+  },
+
+  // Listar todos los usuarios
+  findAll: (callback) => {
+    const query = "SELECT * FROM users";  // Define la consulta para obtener todos los usuarios.
+    db.query(query, (err, results) => {  // Ejecuta la consulta.
+      if (err) return callback(err, null);  // Maneja errores.
+      callback(null, results);  // Retorna todos los usuarios.
+    });
+  },
+
+  // Buscar un usuario por ID
+  findById: (id, callback) => {
+    const query = "SELECT * FROM users WHERE id = ?";  // Define la consulta para buscar por ID.
+    db.query(query, [id], (err, results) => {  // Ejecuta la consulta.
+      if (err) return callback(err, null);  // Maneja errores.
+      callback(null, results[0]);  // Retorna el usuario encontrado.
+    });
+  },
+
+  // Actualizar un usuario (¡Hashea la contraseña si se proporciona!)
+  update: (id, data, callback) => {
+    // Verificar si se está enviando una nueva contraseña para actualizar
+    if (data.password) {
+      // Hashear la nueva contraseña antes de actualizar
+      const saltRounds = 10;  // Define el número de rondas de sal.
+      data.password = bcrypt.hashSync(data.password, saltRounds);  // Hashea la contraseña.
+    }
+
+    const query = "UPDATE users SET ? WHERE id = ?";  // Define la consulta de actualización.
+    db.query(query, [data, id], (err, results) => {  // Ejecuta la consulta.
+      if (err) return callback(err, null);  // Maneja errores.
+      // Verificar si se actualizó alguna fila para confirmar que el ID existía
+      const userExists = results.affectedRows > 0;
+      callback(null, results);  // Retorna el resultado de la actualización.
+    });
+  },
+
+  delete: (id, callback) => {
+    const query = "DELETE FROM users WHERE id = ?";  // Define la consulta de eliminación.
+    db.query(query, [id], (err, results) => {  // Ejecuta la consulta.
+      if (err) {
+        return callback(err, null);  // Maneja errores.
+      }
+      const userExists = results.affectedRows > 0;
+      callback(null, userExists);  // Retorna el resultado de la eliminación.
+    });
+  },
 };
 
-module.exports = User;
+/* En resumen: Este archivo importa la conexión a la base de datos (db) y la herramienta para hashear contraseñas (bcrypt). Luego, define un objeto User que contendrá todas las operaciones específicas para la tabla users y lo exporta para que los controladores puedan usarlo.*/
+module.exports = User;  // Exporta el modelo User.
