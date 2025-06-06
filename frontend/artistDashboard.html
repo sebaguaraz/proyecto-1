@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard del Artista - Conexión Musical</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/artistDashboard.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Conexión Musical</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#" id="logoutButton">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <h2>Bienvenido a tu Dashboard, <span id="usernameDisplay"></span></h2>
+        <p>Gestiona tu perfil de artista aquí.</p>
+
+        <section class="profile-management">
+            <h3>Mi Perfil de Artista</h3>
+            <form id="artistProfileForm">
+                <div class="form-group">
+                    <label for="photo_url">URL de Foto de Perfil:</label>
+                    <input type="url" id="photo_url" name="photo_url" placeholder="https://ejemplo.com/tu_foto.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="bio">Biografía:</label>
+                    <textarea id="bio" name="bio" rows="5" placeholder="Cuéntanos sobre ti, tu estilo musical, influencias..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="contact_email">Email de Contacto:</label>
+                    <input type="email" id="contact_email" name="contact_email" placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Número de Teléfono:</label>
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="+549223XXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="website_url">URL de Sitio Web:</label>
+                    <input type="url" id="website_url" name="website_url" placeholder="https://www.tuweb.com">
+                </div>
+                <div class="form-group">
+                    <label for="spotify_url">URL de Spotify:</label>
+                    <input type="url" id="spotify_url" name="spotify_url" placeholder="https://open.spotify.com/artist/...">
+                </div>
+                <div class="form-group">
+                    <label for="apple_music_url">URL de Apple Music:</label>
+                    <input type="url" id="apple_music_url" name="apple_music_url" placeholder="https://music.apple.com/us/artist/...">
+                </div>
+                <div class="form-group">
+                    <label for="tidal_url">URL de Tidal:</label>
+                    <input type="url" id="tidal_url" name="tidal_url" placeholder="https://tidal.com/browse/artist/...">
+                </div>
+                <div class="form-group">
+                    <label for="youtube_music_url">URL de YouTube Music:</label>
+                    <input type="url" id="youtube_music_url" name="youtube_music_url" placeholder="https://music.youtube.com/channel/...">
+                </div>
+                <div class="form-group">
+                    <label for="youtube_channel_url">URL de Canal de YouTube:</label>
+                    <input type="url" id="youtube_channel_url" name="youtube_channel_url" placeholder="https://www.youtube.com/user/...">
+                </div>
+                <div class="form-group">
+                    <label for="instagram_url">URL de Instagram:</label>
+                    <input type="url" id="instagram_url" name="instagram_url" placeholder="https://www.instagram.com/tu_artista/">
+                </div>
+
+                <button type="submit">Actualizar Perfil</button>
+                <p id="profileMessage" class="message"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Conexión Musical. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="js/artistDashboard.js"></script>
+</body>
+</html>
