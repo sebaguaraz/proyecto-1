@@ -12,13 +12,13 @@ const User = {
   },
 
   // Crea un usuario (hashea la contraseña antes de guardar)
-  create: (username, plainPassword, role, callback) => {
+  create: (username, plainPassword, role_id, callback) => {
     const saltRounds = 10; // Coste del hasheo (balance entre seguridad y rendimiento)
     bcrypt.hash(plainPassword, saltRounds, (err, hashedPassword) => {
       if (err) return callback(err, null);
       
-      const query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
-      db.query(query, [username, hashedPassword, role], (err, result) => {
+      const query = "INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)";
+      db.query(query, [username, hashedPassword, role_id], (err, result) => {
         if (err) return callback(err, null);
         callback(null, result);
       });
