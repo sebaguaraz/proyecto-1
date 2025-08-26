@@ -28,7 +28,7 @@ const { protect, authorize } = require("../middlewares/authMiddleware");
 // - Si 'protect' pasa, entonces 'artistController.getArtistProfile' se ejecuta:
 //   Contiene la lógica para buscar el perfil en la DB y enviarlo, incluyendo las comprobaciones de seguridad
 //   (si el usuario logueado tiene permiso para ver ese perfil específico).
-router.get("/profile/:id", protect, artistController.getArtistProfile);
+router.get("/profile/:id", protect, authorize(["admin","artist"]), artistController.getArtistProfile);
 
 
 // 2. Ruta para ACTUALIZAR (modificar) el perfil de un artista específico.
@@ -42,7 +42,7 @@ router.get("/profile/:id", protect, artistController.getArtistProfile);
 // - Si 'protect' pasa, entonces 'artistController.updateArtistProfile' se ejecuta:
 //   Contiene la lógica para actualizar los datos del perfil en la DB, y las comprobaciones de seguridad
 //   (si el usuario logueado tiene permiso para modificar ese perfil).
-router.put("/profile/:id", protect, artistController.updateArtistProfile);
+router.put("/profile/:id", protect, authorize(["artist"]),artistController.updateArtistProfile);
 
 
 // 3. Ruta para OBTENER TODOS los perfiles de artistas.

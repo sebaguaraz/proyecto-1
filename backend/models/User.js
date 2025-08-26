@@ -2,9 +2,25 @@ const db = require("./db");  // Importa la conexión a la base de datos.
 const bcrypt = require("bcryptjs");  // Importa bcrypt para hashear contraseñas.
 
 const User = {
-  // Busca un usuario por su username (para login)
+  // Busca un usuario por su username y trae también el nombre de su rol.
   findByUsername: (username, callback) => {
-    const query = "SELECT * FROM users WHERE username = ?";
+    // Esta es la consulta final, 100% explícita.
+    const query = `
+      SELECT -- Selecciona TODAS las columnas de la tabla 'users'.
+        users.id,
+        users.username,
+        users.password,
+        users.role_id,
+        users.created_at,
+        roles.name AS role -- Y también selecciona la columna 'name' de la tabla 'roles', y la renombra como 'role'.
+      FROM
+        users -- La tabla principal de la consulta es 'users'.
+      INNER JOIN
+        roles ON users.role_id = roles.id -- La unimos con la tabla 'roles' donde el 'role_id' del usuario coincida con el 'id' del rol
+      WHERE
+        users.username = ?
+      
+        `;
     db.query(query, [username], (err, results) => {
       if (err) return callback(err, null);
       callback(null, results[0]); // Retorna el primer usuario encontrado o null

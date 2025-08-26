@@ -7,10 +7,7 @@ const userController = require("../controllers/userController");
 router.get("/", protect, authorize(["admin"]), userController.getAllUsers);
 
 // Ruta para obtener un usuario por ID (protegida)
-router.get("/:id", protect, userController.getUserById); // La autorización compleja se queda en el controlador
-
-// Ruta para crear un nuevo usuario (protegida)
-router.post("/", protect, authorize(["admin"]), userController.createUser);
+router.get("/:id", protect, authorize(["admin"]), userController.getUserById);
 
 // Ruta para actualizar un usuario (protegida)
 router.put("/:id", protect, userController.updateUser); // La autorización compleja se queda en el controlador

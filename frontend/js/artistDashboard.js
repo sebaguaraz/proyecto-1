@@ -49,8 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Si no tenemos la tarjeta de identificación o no es un artista, no podemos entrar.
         // Lo mandamos de vuelta a la página de inicio para que inicie sesión.
         if (!token || !userId || userRole !== 'artist') {
-            // ¡ATENCIÓN A ESTA LÍNEA CORREGIDA! Pasamos el mensaje y el tipo, no una función.
-            console.log('Necesitas iniciar sesión como artista.', 'error'); // Mensaje de error.
+            showMessage('Necesitas iniciar sesión como artista.', 'error'); // Mensaje de error para el usuario.
             setTimeout(() => {
                 window.location.href = 'index.html'; // Volvemos a la página de inicio.
             }, 2000);
@@ -63,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             // Le pedimos al "cerebro" principal (servidor) los datos de este artista usando su ID.
-            const response = await fetch(`http://localhost:3000/api/artists/profile/${userId}`, {
+            const response = await fetch(`/api/artists/profile/${userId}`, {
                 method: 'GET', // Le decimos que queremos OBTENER datos.
                 headers: {
                     'Authorization': `Bearer ${token}`, // Le mostramos nuestra "tarjeta de identificación".
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showMessage('Tu perfil fue cargado.', 'success'); // Mensaje de éxito.
             } else {
                 // Si el servidor nos dice que hubo un problema...
-                showMessage(`Error al cargar tu perfil: ${data.message || 'Desconocido'}`, 'error'); // Mensaje de error.
+                showMessage(`Error al cargar tu perfil: ${data.error || 'Desconocido'}`, 'error'); // Mensaje de error.
             }
 
         } catch (error) {
@@ -149,8 +148,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showMessage('¡Perfil actualizado con éxito!', 'success'); // Mensaje de éxito.
                 loadArtistProfile(); // Volvemos a cargar el perfil para ver los cambios al instante.
             } else {
+                showMessage(`Error al actualizar: ${data.error || 'Desconocido'}`, 'error'); // Mensaje de error.
+                
+                sessionStorage.clear(); //elimina todo el almacenamiento del sessionstorage
                 // Si hubo un error al guardar...
-                showMessage(`Error al actualizar: ${data.message || 'Desconocido'}`, 'error'); // Mensaje de error.
+                
+                setTimeout(() => window.location.href = "index.html", 6000);
+        
             }
         } catch (error) {
             // Si no pudimos hablar con el servidor para guardar...

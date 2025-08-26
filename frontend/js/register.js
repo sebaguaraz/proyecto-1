@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Pequeña función para mostrar mensajes de forma consistente
     function mostrarMensaje(mensaje, tipo = 'danger') { // tipo puede ser 'success' o 'danger'
-        registerMessage.innerHTML = mensaje;
+        registerMessage.textContent = mensaje;
         registerMessage.className = `alert alert-${tipo} mt-3`;
     }
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // ...primero, evita que el formulario se envíe de la manera tradicional (que recargaría la página).
             event.preventDefault();
             // Limpia cualquier mensaje anterior y quita clases de alerta.
-            registerMessage.innerHTML = '';
+            registerMessage.textContent = '';
             registerMessage.className = 'mt-3'; // Clase base de Bootstrap para margen
 
             // Obtiene el valor escrito por el usuario en el campo de "username".

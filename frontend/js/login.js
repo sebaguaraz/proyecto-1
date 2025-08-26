@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 'mensaje' es el texto que queremos mostrar.
     // 'tipo' nos dice si es un mensaje de 'success' (verde, salió bien) o 'danger' (rojo, algo falló).
     function mostrarMensaje(mensaje, tipo = 'danger') {
-        loginMessage.innerHTML = mensaje; // Ponemos el texto dentro del lugar para mensajes.
+        loginMessage.textContent = mensaje; // Ponemos el texto dentro del lugar para mensajes.
         loginMessage.className = `alert alert-${tipo} mt-3`; // Le damos el estilo de color (verde o rojo) y un poco de espacio.
     }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault(); // Detenemos la recarga de la página.
 
             // Limpiamos cualquier mensaje viejo para que no moleste.
-            loginMessage.innerHTML = '';
+            loginMessage.textContent = '';
             loginMessage.className = 'mt-3'; // Volvemos a ponerle el espacio inicial.
 
             // Agarramos lo que la persona escribió en el campo de "Usuario".
@@ -77,13 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Después de esperar, decidimos a dónde enviarlo según su 'rol'.
                         if (data.role === 'artist') {
                             window.location.href = 'artistDashboard.html'; // Si es artista, lo mandamos a su dashboard especial.
-                        } else{
-                            window.location.href = 'dashboard.html'; // Si no es artista (quizás un fan), lo mandamos a un dashboard general.
+                        } else if(data.role === 'admin'){
+                            window.location.href = 'adminDashboard.html'; // Si no es artista (quizás un fan), lo mandamos a un dashboard general.
                         }
                     }, 1500); // El tiempo que esperamos.
 
                 } else { // Si el servidor nos dice que hubo un error (ej. contraseña incorrecta)...
-                    mostrarMensaje(data.message || data.error || 'Error en el login. Verifica tus credenciales.', 'danger'); // Mostramos un mensaje rojo de error.
+                    mostrarMensaje(data.error || 'Error en el login. Verifica tus credenciales.', 'danger'); // Mostramos un mensaje rojo de error.
                 }
             } catch (error) { // Si algo sale mal al intentar hablar con el servidor (ej. internet se cayó)...
                 console.error('Error al intentar iniciar sesión:', error); // Le decimos al programador qué pasó.

@@ -8,7 +8,8 @@ const jwt = require("jsonwebtoken"); // Traemos la herramienta para leer los "pa
 const protect = (req, res, next) => {
     // La persona nos entrega su "pasaporte" en el encabezado de su solicitud.
     // Viene como "Bearer <el_pasaporte_aqui>", así que lo separamos para quedarnos solo con el pasaporte.
-    const token = req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
     // Si la persona no nos da ningún pasaporte...
     if (!token) {
@@ -26,7 +27,7 @@ const protect = (req, res, next) => {
         next();
     } catch (error) {
         // Si el pasaporte está dañado, no tiene el sello correcto, o está vencido...
-        res.status(401).json({ error: "Token inválido" }); // ...le decimos: "¡Alto! Tu pasaporte no sirve."
+        return res.status(401).json({ error: "Token inválido" }); // ...le decimos: "¡Alto! Tu pasaporte no sirve."
     }
 };
 

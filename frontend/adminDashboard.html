@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - Musicalendaria</title>
+    <link rel="stylesheet" href="./css/adminDashboard.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Panel de Moderación de Artistas</h2>
+        <button id="logoutButton" class="logout-btn">Cerrar Sesión</button>
+        <button id="showArtistsButton" class="main-btn">Mostrar todos los usuarios registrados</button>
+        <div id="message" class="message" style="display: flex;"></div>
+        <table id="artistTable">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th >Foto de perfil</th>
+                    <th>Nombre Artístico</th>
+                    <th >Email</th>
+                    <th >Telefono</th>
+                    <th >Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="artistTableBody">
+                
+            </tbody>
+
+        </table>
+
+        
+    </div>
+    <footer class="footer">
+        <p>© 2024 Musicalendaria - Panel de Administración</p>
+    </footer>
+    <script src="./js/adminDashboard.js"></script>
+</body>
+</html>
