@@ -1,4 +1,4 @@
-const db = require("./db"); // Conexión a la base de datos
+const db = require("./db");
 
 const Event = {
   // Aquí definiremos las funciones para crear, leer, actualizar y borrar eventos
@@ -7,39 +7,35 @@ const Event = {
    * Crea un nuevo evento en la base de datos.
    * @param {object} eventData - Objeto con los datos del evento.
    *   Ej: { artist_id, title, date, location, entry_mode, price, ticket_link, flyer }
-   * @param {function} callback - Función a ejecutar tras la consulta (err, results).
    */
-  create: (eventData, callback) => {
+  async create (existingEvent) {
     // cadena sql para insertar un nuevo evento en la base de datos
     const query = `
       INSERT INTO events (
-        artist_id, 
+        artist_id,
+        entry_modes_id, 
         title, 
-        date, 
+        date,
+        time, 
         location, 
-        entry_mode, 
         price, 
-        ticket_link, 
-        flyer 
+        flyer_url
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     // valores a insertar en la base de datos, se pasan como un array para evitar inyecciones SQL
-    const values = [
-      eventData.artist_id,
-      eventData.title,
-      eventData.date, // Asegúrate de que el formato sea 'YYYY-MM-DD HH:MM:SS'
-      eventData.location,
-      eventData.entry_mode,
-      eventData.price,
-      eventData.ticket_link,
-      eventData.flyer
-    ];
-    db.query(query, values, (err, results) => {
-      if (err) return callback(err, null);
-      // results.insertId contiene el ID del evento recién creado
-      callback(null, { id: results.insertId, ...eventData });
-    });
+    const {
+      artist_id,
+      entry_mode_id,
+      title,
+      date, // Asegúrate de que el formato sea 'YYYY-MM-DD HH:MM:SS'
+      time,
+      location,
+      price,
+      flyer_url 
+    } = existingEvent;
+    const [result] = await db.query( query, [artist_id, entry_mode_id, title, date, time, location, price, flyer_url]);
+    return result
   },
 
   /**
@@ -47,13 +43,10 @@ const Event = {
    * @param {number} id - ID del evento a buscar.
    * @param {function} callback - Función a ejecutar tras la consulta (err, event).
    */
-  findById: (id, callback) => {
+  async findById (id) {
     const query = "SELECT * FROM events WHERE id = ?";
-    db.query(query, [id], (err, results) => {
-      if (err) return callback(err, null);
-      // results es un array, devolvemos el primer elemento o null si no se encuentra
-      callback(null, results.length > 0 ? results[0] : null);
-    });
+    const [results] = await db.query(query, [id]);
+    return results[0] || null;
   },
 
   /**
@@ -61,24 +54,20 @@ const Event = {
    * @param {number} artistId - ID del artista.
    * @param {function} callback - Función a ejecutar tras la consulta (err, events).
    */
-  findAllByArtistId: (artistId, callback) => {
-    const query = "SELECT * FROM events WHERE artist_id = ? ORDER BY date DESC"; // Ordenamos por fecha descendente
-    db.query(query, [artistId], (err, results) => {
-      if (err) return callback(err, null);
-      callback(null, results);
-    });
+  async findAllByArtistId (artistId) {
+    const query = "SELECT * FROM events WHERE artist_id = ? ORDER BY date DESC";
+    const [results] = await db.query(query, [artistId]);
+    return results || [];
   },
 
   /**
    * Busca todos los eventos (útil para una cartelera general o un administrador).
    * @param {function} callback - Función a ejecutar tras la consulta (err, events).
    */
-  findAll: (callback) => {
-    const query = "SELECT * FROM events ORDER BY date DESC"; // Ordenamos por fecha descendente
-    db.query(query, (err, results) => {
-      if (err) return callback(err, null);
-      callback(null, results);
-    });
+  async findAll () {
+    const query = "SELECT * FROM events ORDER BY date DESC";
+    const [results] = await db.query(query);
+    return results || [];
   },
 
   /**
@@ -87,12 +76,10 @@ const Event = {
    * @param {object} dataToUpdate - Objeto con los campos a actualizar.
    * @param {function} callback - Función a ejecutar tras la consulta (err, results).
    */
-  update: (id, dataToUpdate, callback) => {
+  async update (id, dataToUpdate) {
     const query = "UPDATE events SET ? WHERE id = ?";
-    db.query(query, [dataToUpdate, id], (err, results) => {
-      if (err) return callback(err, null);
-      callback(null, results); // results.affectedRows > 0 indica si se actualizó algo
-    });
+    const [result] = await db.query(query, [dataToUpdate, id]);
+    return result.affectedRows > 0 ? result : null;
   },
 
   /**
@@ -100,12 +87,10 @@ const Event = {
    * @param {number} id - ID del evento a eliminar.
    * @param {function} callback - Función a ejecutar tras la consulta (err, results).
    */
-  delete: (id, callback) => {
+  async delete (id) {
     const query = "DELETE FROM events WHERE id = ?";
-    db.query(query, [id], (err, results) => {
-      if (err) return callback(err, null);
-      callback(null, results); // results.affectedRows > 0 indica si se eliminó algo
-    });
+    const [result] = await db.query(query, [id]);
+    return result.affectedRows > 0 ? result : null;
   }
 };
 

@@ -1,28 +1,32 @@
-const mysql = require('mysql2'); // Importa la librería para hablar con MySQL
-const dotenv = require('dotenv'); // Importa dotenv para leer el archivo .env
+const mysql = require('mysql2/promise');
+const dotenv = require('dotenv');
 
-dotenv.config(); // Carga las variables del archivo .env
+dotenv.config();
 
-// Crea una instancia y configura la conexión a la base de datos MySQL
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,       // Dirección del servidor de la base de datos (ej: 'localhost')
-    user: process.env.DB_USER,       // Usuario para conectarse a la base de datos (ej: 'root')
-    password: process.env.DB_PASSWORD, // Contraseña de ese usuario
-    database: process.env.DB_NAME      // Nombre de la base de datos específica (ej: 'musicalendaria_db')
-});
+// Configuración simple de la base de datos
+const dbConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+};
 
-// Intenta conectar y muestra un mensaje en consola
-db.connect(err => {
-    if (err) {
-        // Si hay un error, lo muestra en la consola
-        console.error('Error de conexión a la base de datos:', err);
-    } else {
-        // Si todo va bien, avisa que se conectó
+// Creamos un pool de conexiones (recomendado para apps web)
+const pool = mysql.createPool(dbConfig);
+
+// Probar la conexión al iniciar
+async function conectar() {
+    try {
+        const conn = await pool.getConnection(); // Obtenemos una conexión del pool
+        await conn.query('SELECT 1'); // Ejecutamos una consulta simple para verificar
+        conn.release(); // Liberamos la conexión
         console.log('Conectado a la base de datos');
+    } catch (err) {
+        console.error('Error al conectar a la base de datos:', err);
     }
-});
+}
 
-// Exporta el objeto 'db' para que otros archivos (los modelos) puedan usarlo
-module.exports = db;
+conectar(); // Ejecutamos la prueba de conexión
 
-
+// Exportamos el pool para usar en los modelos
+module.exports = pool;

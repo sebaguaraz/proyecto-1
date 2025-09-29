@@ -3,8 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logoutButton');
     const showArtistsButton = document.getElementById('showArtistsButton');
     const message = document.getElementById('message');
-    const artistTable = document.getElementById('artistTable');
+    const logTableBody = document.getElementById('logTableBody');
+    const showLogsButton = document.getElementById('showLogsButton');
     const artistTableBody = document.getElementById('artistTableBody');
+
 
     // Verificar autenticación y rol
     const token = sessionStorage.getItem('token');
@@ -66,13 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
             rowMessage.appendChild(messageCell);
             artistTableBody.appendChild(rowMessage);
         }
-        
+
         artists.map((artist) => {
             const row = document.createElement("tr");
 
-            const Id = document.createElement("td");
-            Id.textContent = artist.user_id;
-            
             // creo celda para la imagen
             const imgcell = document.createElement("td");
             const img_url = document.createElement("img");
@@ -81,15 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
             img_url.style.borderRadius = "50px";
             img_url.width = "100px";
             imgcell.appendChild(img_url);
-            
-            
+
+
             const username = document.createElement("td");
             const contact_email = document.createElement("td");
             const phone_number = document.createElement("td");
             username.textContent = artist.username || "N/A";
             contact_email.textContent = artist.contact_email || "N/A";
             phone_number.textContent = artist.phone_number || "N/A";
-            
+
             // Celda de acciones
             const actionsCell = document.createElement('td');
             const deleteButton = document.createElement('button');
@@ -97,9 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteButton.className = " delete-btn"
             deleteButton.setAttribute('data-id', artist.user_id);
             actionsCell.appendChild(deleteButton);
-            
+
             // Agregar celdas a la fila
-            row.appendChild(Id);
             row.appendChild(imgcell);
             row.appendChild(username);
             row.appendChild(contact_email);
@@ -147,10 +145,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    showArtistsButton.addEventListener("click", loadArtists)
 
-showArtistsButton.addEventListener("click", loadArtists)
 
-logoutButton.addEventListener("click", () => {
+    const loadRegisters = async () => {
+        try {
+            const res = await fetch(`/api/actions/allRegisters`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-type": "application/json"
+                }
+            })
+
+            const logs = await res.json();
+
+            displayLogs(logs);
+
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
+    const displayLogs = (logs) => {
+
+        logTableBody.textContent = "";
+        
+        if (logs.length === 0) {
+            const rowMessage = document.createElement("tr");
+            const messageCell = document.createElement("td");
+            messageCell.textContent = "No hay registros de acciones";
+            rowMessage.appendChild(messageCell);
+            logTableBody.appendChild(rowMessage);
+
+        }
+
+        logs.map(log => {
+            // row es la fila y td son las celdas
+            const row = document.createElement("tr");
+            const ID = document.createElement("td");
+            const action = document.createElement("td");
+
+
+            ID.textContent = log.user_id;
+            action.textContent = log.action;
+
+            row.appendChild(ID);
+            row.appendChild(action);
+
+            logTableBody.appendChild(row);
+        })
+    }
+
+
+    logoutButton.addEventListener("click", () => {
 
         sessionStorage.removeItem("token")
         sessionStorage.removeItem("userRole")
@@ -165,4 +214,8 @@ logoutButton.addEventListener("click", () => {
         return;
 
     })
+
+
+    showLogsButton.addEventListener("click", loadRegisters)
+
 })

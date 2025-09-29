@@ -3,6 +3,8 @@ const dotenv = require('dotenv');   // Importa la librería 'dotenv' para cargar
 const authRoutes = require('./routes/authRoutes');  // Importa las rutas relacionadas con la autenticación (registro, login).
 const userRoutes = require("./routes/userRoutes"); // Importa las rutas relacionadas con la gestión de usuarios.
 const artistRoutes = require("./routes/artistRoutes");
+const actionRoutes = require("../backend/routes/actionRoutes")
+const eventRoutes = require("./routes/eventRoutes");
 const cors = require('cors');       // Importa 'cors' para permitir peticiones desde diferentes dominios (frontend).
 const path = require('path');       // Importa 'path' para manejar rutas de archivos.
 
@@ -27,6 +29,8 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/api/auth', authRoutes);  // Asigna las rutas de autenticación bajo el prefijo '/api/auth'.
 app.use("/api/users", userRoutes); // Asigna las rutas de usuarios bajo el prefijo "/api/users".
 app.use("/api/artists", artistRoutes);
+app.use("/api/actions", actionRoutes)
+app.use("/api/events", eventRoutes)
 
 app.listen(port, () => {  // Inicia el servidor y lo pone a escuchar en el puerto especificado.
   console.log(`Servidor corriendo en http://localhost:${port}`);  // Mensaje en la consola cuando el servidor está listo.

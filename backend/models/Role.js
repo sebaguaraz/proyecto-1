@@ -2,12 +2,10 @@ const db = require("./db");
 
 
 const Role = {
-    findByName: (roleName, callback) => {
-        const query = "SELECT id FROM roles WHERE name = ?";
-        db.query(query,[roleName],(err,results) => {
-            if(err) return callback(err,null);
-            callback(null, results[0]);
-        });
+    async findByName (roleName) {
+        const query = "SELECT id FROM roles WHERE name = ?"; //db debe trabajar con promesas y no calllback porque db.query es asincrono y retorna una promesa
+        const [result] = await db.query(query,[roleName]);
+        return result[0];
     }
 };
 

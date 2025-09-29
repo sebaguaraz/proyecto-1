@@ -3,156 +3,212 @@ const Event = require("../models/Event");
 // El modelo 'Artist' lo usaremos para la lógica de creación y permisos de eventos.
 const Artist = require("../models/Artist");
 
+const Entry_Mode = require("../models/Entry_Mode")
+
 // --- FUNCIÓN PARA CREAR UN NUEVO EVENTO ---
-exports.createEvent = (req, res) => {
+exports.createEvent = async (req, res) => {
   const eventData = req.body;
-  const loggedInUser = req.user;
+  const loggedInUser = req.user;// Obtiene el usuario autenticado desde la solicitud 
 
-  // Validaciones básicas de campos obligatorios.
-  if (!eventData.title || !eventData.date || !eventData.location || !eventData.entry_mode) {
-    return res.status(400).json({ message: "Faltan campos obligatorios (título, fecha, lugar, modo de entrada)." });
-  }
+  try {
 
-  // Lógica para crear el evento según el rol del usuario.
-  if (loggedInUser.role === 'artist') {
-    // Si es un artista, busca su perfil para obtener el artist_id.
-    Artist.findByUserId(loggedInUser.id, (err, artistProfile) => {
-      if (err) return res.status(500).json({ message: "Error al buscar el perfil del artista." });
-      if (!artistProfile) return res.status(403).json({ message: "No tienes un perfil de artista para crear eventos." });
-      
-      // Prepara los datos del evento con el artist_id del perfil.
-      const fullEventData = { ...eventData, artist_id: artistProfile.id };
-      
-      Event.create(fullEventData, (err, result) => {
-        if (err) {
-          console.error("Error al crear evento:", err);
-          return res.status(500).json({ message: "Error al crear el evento." });
-        }
-        res.status(201).json({ message: "Evento creado con éxito", id: result.id });
-      });
-    });
-  } else if (loggedInUser.role === 'admin') {
-    // Si es admin, debe enviar el 'artist_id' en el cuerpo de la petición.
-    if (!eventData.artist_id) {
-      return res.status(400).json({ message: "Como admin, debes especificar el 'artist_id' para el evento." });
+    if (!eventData.title || !eventData.date || !eventData.location || !eventData.entry_mode) {
+      return res.status(400).json({ message: "Faltan campos obligatorios (título, fecha, lugar, modo de entrada)." });
     }
-    // Prepara los datos del evento con el artist_id proporcionado por el admin.
-    const fullEventData = { ...eventData, artist_id: eventData.artist_id };
 
-    Event.create(fullEventData, (err, result) => {
-      if (err) {
-        console.error("Error al crear evento:", err);
-        return res.status(500).json({ message: "Error al crear el evento." });
-      }
-      res.status(201).json({ message: "Evento creado con éxito", id: result.id });
-    });
-  } else {
-    return res.status(403).json({ message: "No tienes permisos para crear eventos." });
+    // Lógica para crear el evento según el rol del usuario.
+    if (loggedInUser.role !== 'artist') {
+
+      return res.status(403).json({ message: "No tienes permisos para crear eventos." });
+
+
+    }
+
+    // Si es un artista, busca su perfil para obtener el artist_id.
+    const artistProfile = await Artist.findByUserId(loggedInUser.id);
+
+    if (!artistProfile) return res.status(403).json({ message: "No tienes un perfil de artista para crear eventos." });
+
+    const entry_mode = await Entry_Mode.findByName(eventData.entry_mode);
+    if (!entry_mode) {
+      return res.status(400).json({ message: "Modo de entrada no válido." });
+    }
+
+    const existingEvent = {
+      title: eventData.title,
+      date: eventData.date,
+      time: eventData.time,
+      location: eventData.location,
+      price: eventData.price,
+      flyer_url: eventData.flyer_url,
+      artist_id: artistProfile.id,        
+      entry_mode_id: entry_mode.id
+    }
+    await Event.create(existingEvent);
+
+    res.status(201).json({ message: "Evento creado con éxito" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al crear el evento." });
   }
+
+
 };
 
 // --- FUNCIÓN PARA OBTENER TODOS LOS EVENTOS ---
 // Para la cartelera general de eventos.
-exports.getAllEvents = (req, res) => {
-  Event.findAll((err, events) => {
-    if (err) return res.status(500).json({ message: "Error al obtener los eventos." });
+exports.getAllEvents = async (req, res) => {
+  try {
+
+    const events = await Event.findAll();
+    if (!events || events.length === 0) return res.status(404).json({ message: "No se encontraron eventos." });
+
     res.status(200).json(events);
-  });
+
+  } catch (error) {
+
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al obtener los eventos." });
+
+  }
+
 };
 
 // --- FUNCIÓN PARA OBTENER UN EVENTO POR SU ID ---
-exports.getEventById = (req, res) => {
+exports.getEventById = async (req, res) => {
+
   const { id } = req.params;
 
-  Event.findById(id, (err, event) => {
-    if (err) return res.status(500).json({ message: "Error al buscar el evento." });
+  try {
+    if(isNaN(id)) return res.status(400).json({message: "El id del evento debe ser un número."})
+    
+      const event = await Event.findById(id);
+
     if (!event) return res.status(404).json({ message: "Evento no encontrado." });
+
     res.status(200).json(event);
-  });
+
+  } catch (error) {
+
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al obtener el evento." });
+
+  }
+
 };
 
 // --- FUNCIÓN PARA OBTENER TODOS LOS EVENTOS DE UN ARTISTA ESPECÍFICO ---
-exports.getEventsByArtistId = (req, res) => {
-  const { artistId } = req.params;
+exports.getEventsByArtistId = async (req, res) => {
 
-  // Obtiene todos los eventos para un artistId específico.
-  Event.findAllByArtistId(artistId, (err, events) => {
-    if (err) {
-      return res.status(500).json({ message: "Error al obtener los eventos del artista." });
-    }
+  try {
+
+    const { artistId } = req.params;
+
+    if(isNaN(artistId)) return res.status(400).json({message: "El id del artista debe ser un número."})
+
+
+    // Obtiene todos los eventos para un artistId específico.
+    const events = await Event.findAllByArtistId(artistId);
+
+    if (!events || events.length === 0) return res.status(404).json({ message: "No se encontraron eventos para este artista." });
+
     res.status(200).json(events);
-  });
+
+  } catch (error) {
+
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al obtener los eventos." });
+
+  }
+
 };
 
 // --- FUNCIÓN PARA ACTUALIZAR UN EVENTO ---
-exports.updateEvent = (req, res) => {
-  const { id: eventId } = req.params;
-  const dataToUpdate = req.body;
-  const loggedInUser = req.user;
+exports.updateEvent = async (req, res) => {
 
-  // Primero, buscar el evento para verificar existencia y permisos.
-  Event.findById(eventId, (err, event) => {
-    if (err) return res.status(500).json({ message: "Error al buscar el evento para actualizar." });
-    if (!event) return res.status(404).json({ message: "Evento no encontrado." });
+  try {
 
-    // Lógica de actualización según el rol.
+    const { id } = req.params;
+    const dataToUpdate = req.body;
+    const loggedInUser = req.user;
+
+    if(isNaN(id)) return res.status(400).json({message: "El id del evento debe ser un número."})
+
+    // Primero, buscar el evento para verificar existencia y permisos.
+    const eventExists = await Event.findById(id);
+
+    if (!eventExists) return res.status(404).json({ message: "Evento no encontrado." });
+
+
     if (loggedInUser.role === 'admin') {
-      // Un admin puede actualizar cualquier evento.
-      Event.update(eventId, dataToUpdate, (err, result) => {
-        if (err) return res.status(500).json({ message: "Error al actualizar el evento." });
-        if (result.affectedRows === 0) return res.status(404).json({ message: "Evento no encontrado o sin cambios." });
-        res.status(200).json({ message: "Evento actualizado con éxito por admin." });
-      });
+
+      const updateEvent = await Event.update(id, dataToUpdate);
+      return res.status(200).json(updateEvent);
+
     } else if (loggedInUser.role === 'artist') {
-      // Un artista solo puede actualizar sus propios eventos.
-      Artist.findByUserId(loggedInUser.id, (err, artistProfile) => {
-        if (err) return res.status(500).json({ message: "Error al buscar el perfil del artista." });
-        if (!artistProfile || artistProfile.id !== event.artist_id) {
-          return res.status(403).json({ message: "No tienes permisos para actualizar este evento." });
-        }
-        Event.update(eventId, dataToUpdate, (err, result) => {
-          if (err) return res.status(500).json({ message: "Error al actualizar el evento." });
-          if (result.affectedRows === 0) return res.status(404).json({ message: "Evento no encontrado o sin cambios." });
-          res.status(200).json({ message: "Evento actualizado con éxito por artista." });
-        });
-      });
+      const artist = await Artist.findByUserId(loggedInUser.id);
+
+      if (!artist) return res.status(403).json({ message: "No tienes un perfil de artista para actualizar eventos." });
+
+      if (eventExists.artist_id !== artist.id) {
+        return res.status(403).json({ message: "No tienes permisos para actualizar este evento." });
+      }
+      const updateEvent = await Event.update(id, dataToUpdate);
+      return res.status(200).json(updateEvent);
+
     } else {
       return res.status(403).json({ message: "No tienes permisos para actualizar eventos." });
     }
-  });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al actualizar el evento." });
+  }
+
+
+
+
 };
 
 // --- FUNCIÓN PARA ELIMINAR UN EVENTO ---
-exports.deleteEvent = (req, res) => {
-  const { id: eventId } = req.params;
-  const loggedInUser = req.user;
+exports.deleteEvent = async (req, res) => {
+  
+      const { id } = req.params;
+      const loggedInUser = req.user;
 
-  // Buscar el evento para verificar existencia y permisos.
-  Event.findById(eventId, (err, event) => {
-    if (err) return res.status(500).json({ message: "Error al buscar el evento para eliminar." });
+  try {
+
+    if(isNaN(id)) return res.status(400).json({message: "El id del evento debe ser un número."})
+
+
+    // Buscar el evento para verificar existencia y permisos.
+    const event = await Event.findById(id)
+
     if (!event) return res.status(404).json({ message: "Evento no encontrado." });
 
-    // Lógica de eliminación según el rol.
-    if (loggedInUser.role === 'admin') {
-      Event.delete(eventId, (err, result) => {
-        if (err) return res.status(500).json({ message: "Error al eliminar el evento." });
-        if (result.affectedRows === 0) return res.status(404).json({ message: "Evento no encontrado para eliminar." });
-        res.status(200).json({ message: "Evento eliminado con éxito por admin." });
-      });
-    } else if (loggedInUser.role === 'artist') {
-      Artist.findByUserId(loggedInUser.id, (err, artistProfile) => {
-        if (err) return res.status(500).json({ message: "Error al buscar el perfil del artista." });
-        if (!artistProfile || artistProfile.id !== event.artist_id) {
-          return res.status(403).json({ message: "No tienes permisos para eliminar este evento." });
-        }
-        Event.delete(eventId, (err, result) => {
-          if (err) return res.status(500).json({ message: "Error al eliminar el evento." });
-          if (result.affectedRows === 0) return res.status(404).json({ message: "Evento no encontrado para eliminar." });
-          res.status(200).json({ message: "Evento eliminado con éxito por artista." });
-        });
-      });
-    } else {
-      return res.status(403).json({ message: "No tienes permisos para eliminar eventos." });
+    if (loggedInUser.role === "artist") {
+
+      const artist = await Artist.findByUserId(loggedInUser.id);
+
+      if (!artist) return res.status(403).json({ message: "No tienes un perfil de artista para eliminar eventos." });
+
+      if (event.artist_id !== artist.id) return res.status(403).json({ message: "No tienes permisos para eliminar este evento." });
+
+      await Event.delete(id);
+
+      return res.status(200).json({ message: "Evento eliminado con éxito." });
+    } else if (loggedInUser.role === "admin") {
+
+      await Event.delete(id);
+
+      return res.status(200).json({ message: "Evento eliminado con éxito." });
     }
-  });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor al eliminar el evento." });
+  }
+
+
 };

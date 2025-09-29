@@ -6,15 +6,14 @@
     <link rel="stylesheet" href="./css/adminDashboard.css">
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h2>Panel de Moderación de Artistas</h2>
         <button id="logoutButton" class="logout-btn">Cerrar Sesión</button>
-        <button id="showArtistsButton" class="main-btn">Mostrar todos los usuarios registrados</button>
+        <button id="showArtistsButton" class="main-btn">Ver Artistas registrados</button>
         <div id="message" class="message" style="display: flex;"></div>
         <table id="artistTable">
             <thead>
                 <tr>
-                    <th >ID</th>
                     <th >Foto de perfil</th>
                     <th>Nombre Artístico</th>
                     <th >Email</th>
@@ -29,8 +28,20 @@
 
         </table>
 
-        
-    </div>
+        <button id="showLogsButton" class="main-btn">Ver registros de acciones</button>
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Acción</th>
+
+                </tr>
+            </thead>
+            <tbody id="logTableBody">
+                
+            </tbody>
+        </table>
+    </main>
     <footer class="footer">
         <p>© 2024 Musicalendaria - Panel de Administración</p>
     </footer>
