@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     mostrarMensaje(data.message || '¡Registro exitoso! Redirigiendo a login...', 'success');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 2000); // Redirige a la página de login.
+                    setTimeout(() => { window.location.href = 'login.html'; }, 2000); // Redirige a la página de login.
                 } else {
                     mostrarMensaje(data.message || data.error || 'Error en el registro. Inténtalo de nuevo.', 'danger');
                 }

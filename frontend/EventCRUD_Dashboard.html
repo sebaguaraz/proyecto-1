@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Eventos - Conexión Musical</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/EventCRUD_Dashboard.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="content-logo">
+                <img src="img/logo-musica.jpg" class="logo" alt="Logo Conexión Musical">
+            </div>
+            <h1 class="title">Conexión Musical</h1>
+            <ul class="nav-links">
+                <li>
+                    <button class="logout-button">
+                        <a href="#" id="logoutButton">Cerrar Sesión</a>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container-wrapper">
+
+        <aside class="sidebar">
+            <div class="sidebar_profile-header">
+                <i class="bi bi-person-circle profile-icon"></i>
+                <span id="artistName">Perfil de Artista</span>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="sidebar-links">
+                    <li class="nav-item">
+                        <a href="artistEvent_Dashboard.html">
+                            <i class="bi bi-calendar-event icon"></i>
+                            Mis Eventos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="EventCRUD_Dashboard.html">
+                            <i class="bi bi-pencil-square icon"></i>
+                            Editar Evento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="artistProfile_Dashboard.html">
+                            <i class="bi bi-person-badge icon"></i>
+                            Editar Perfil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="EventCreate_Dashboard.html">
+                            <i class="bi bi-plus-circle icon"></i>
+                            Crear Evento
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-main">
+
+            <h2 class="page-title">Mis Eventos</h2>
+            <span class="page-subtitle">Gestiona y edita tus próximos conciertos.</span>
+
+            <section class="events-list-panel">
+                <header class="panel-header">
+                    <h3>Eventos Registrados</h3>
+                    <a href="EventCreate_Dashboard.html" class="btn-primary-small">
+                        <i class="bi bi-plus-lg icon"></i>
+                        Crear Evento
+                    </a>
+                </header>
+
+                <div class="table-responsive">
+                    <table class="data-table" id="eventTable">
+                        <thead>
+                            <tr class="header-row">
+                                <th colspan="1">Eventos</th>
+                                <th colspan="7">Detalles</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                            <tr>
+                                <th>Título</th>
+                                <th>Artista</th>
+                                <th>Modo de entrada</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Ubicación</th>
+                                <th>Precio</th>
+                                <th>Flyer url</th>
+                                <th colspan="2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+
+            <form id="editEventForm" class="event-form oculto">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="editEventTitle">Título del Evento (*)</label>
+                        <input type="text" id="editEventTitle" name="eventTitle" placeholder="Nombre del evento"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editEventDate">Fecha (*)</label>
+                        <input type="date" id="editEventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEventTime">Hora (*)</label>
+                        <input type="time" id="editEventTime" name="eventTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEntryMode">Modo de entrada (*)</label>
+                        <select id="editEntryMode" name="entryMode" required>
+                            <option value="">Seleccionar modo</option>
+                            <option value="gratuito">Gratuito</option>
+                            <option value="gorra">Gorra</option>
+                            <option value="beneficio">Beneficio</option>
+                            <option value="arancelado">Arancelado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editLocation">Ubicación (*)</label>
+                        <input type="text" id="editLocation" name="location"
+                            placeholder="Ej: Parque Central o Nombre del Bar" required>
+                    </div>
+                    <div class="form-group" id="editPriceGroup">
+                        <label for="editPrice">Precio (USD)</label>
+                        <input type="number" id="editPrice" name="price" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="editFlyerUrl">URL del Flyer/Imagen promocional</label>
+                    <input type="url" id="editFlyerUrl" name="flyerUrl" placeholder="https://example.com/imagen.jpg">
+                </div>
+
+                <div class="form-actions full-width">
+                    <button type="submit" class="btn-submit">Actualizar Evento</button>
+                    <button type="button" id="cancelEditButton" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+
+
+        </main>
+    </div>
+
+
+    <footer>
+        <p>© 2024 Conexión Musical. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="js/EventCRUD_Dashboard.js"></script>
+</body>
+
+</html>

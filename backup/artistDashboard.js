@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const usernameDisplay = document.getElementById('usernameDisplay');
+    const usernameDisplay = document.getElementById('artistName');
     const artistProfileForm = document.getElementById('artistProfileForm');
     const profileMessage = document.getElementById('profileMessage');
     const logoutButton = document.getElementById('logoutButton');

@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     setTimeout(() => {
                         if (data.role === 'artist') {
-                            window.location.href = 'artistDashboard.html';
+                            window.location.href = 'artistEvent_Dashboard.html';
                         } else if(data.role === 'admin'){
                             window.location.href = 'adminDashboard.html';
                         }

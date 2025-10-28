@@ -31,7 +31,7 @@ exports.register = async (req, res) => {
 
         const resultadoUsuario = await User.create(username, password, rolEncontrado.id);
 
-        await Logs.create(resultadoUsuario.insertId, `${username} se ha registrado correctamente`);
+        await Logs.create(resultadoUsuario.insertId, `${username} se ha registrado al sistema`);
 
         await Artist.create(resultadoUsuario.insertId, username);
 
@@ -69,8 +69,6 @@ exports.login = async (req, res) => {
             { expiresIn: "1h" }
         )
 
-        await Logs.create(usuarioExistente.id, `${usuarioExistente.username} ha iniciado sesión`);
-        
         return res.json({ token, role: usuarioExistente.role, userId: usuarioExistente.id, username: usuarioExistente.username });
 
     } catch (error) {

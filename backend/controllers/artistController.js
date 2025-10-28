@@ -9,7 +9,6 @@ exports.getArtistProfile = async (req, res) => {
   const requesterName = req.user.username;
 
   if (requesterRole !== "admin" && userId !== requesterId) {
-    await Logs.create(requesterId, `${requesterName} Intento ver el perfil de artista con ID ${userId}`);
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
   }
 
@@ -35,7 +34,6 @@ exports.updateArtistProfile = async (req, res) => {
   const data = req.body;
 
   if (userId !== requesterId) {
-    await Logs.create(requesterId, `${requesterName} Intento actualizar el perfil de artista con ID ${userId}`);
     return res.status(403).json({ message: "Acceso denegado. No tienes permiso para actualizar este perfil." });
   }
 

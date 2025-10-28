@@ -1,0 +1,324 @@
+/* Importaciones de iconos */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+/* Variables y Estilos Base */
+:root {
+    --color-primary: #686470;      /* Morado Oscuro (Principal) */
+    --color-secondary: #c7c3cf;    /* Morado Claro (Acento) */
+    --color-text-dark: #333333;
+    --color-white: #ffffff;
+    --color-sidebar-bg: #3a3f57;   /* Fondo gris oscuro para sidebar */
+    --color-action-button-primary: #007bff; /* Azul para botones de acción */
+    --color-action-button-hover: #0056b3;
+    --color-delete-button: #dc3545; /* Rojo para eliminar */
+    --color-link-button: #4CAF50; /* Verde para el botón de enlace/toggle */
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+/* ---------------------------------------------------- */
+/* Header y Navbar (Reutilizado) */
+/* ---------------------------------------------------- */
+
+header {
+    background-color: var(--color-primary);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+    align-items: center;
+}
+
+.content-logo {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    box-shadow: 8px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.title {
+    font-size: 40px;
+    color: var(--color-white);
+    margin: 0;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.logout-button {
+    padding: 10px;
+    background-color: #2f0877;
+    border-radius: 20px;
+    border: 1px solid rgba(150, 145, 145, 0.418);
+    box-shadow: 4px 4px 8px rgba(65, 64, 64, 0.3);
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #bcafcf8c;
+    border-color: rgba(150, 145, 145, 0.418);
+    box-shadow: 4px 4px 8px rgba(65, 64, 64, 0.3);
+}
+
+/* ---------------------------------------------------- */
+/* Layout Principal (Sidebar + Main Content) (Reutilizado) */
+/* ---------------------------------------------------- */
+
+.container-wrapper {
+    display: flex;
+    min-height: calc(100vh - 120px);
+    background-color: #f4f4f9;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--color-sidebar-bg);
+    color: var(--color-white);
+    padding: 20px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar_profile-header {
+    text-align: center;
+    padding: 15px 0 30px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar_profile-header .profile-icon {
+    font-size: 48px;
+    margin-bottom: 5px;
+    color: var(--color-white);
+    display: block;
+}
+
+.sidebar_profile-header #artistName {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    color: var(--color-white);
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-item a:hover {
+    background-color: rgba(146, 139, 139, 0.651);
+}
+
+/* Estilo para todos los iconos dentro de los enlaces de la barra lateral */
+.sidebar-links .icon {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+/* Contenido Principal */
+.content-main {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: transparent;
+    max-width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: 2em;
+    color: var(--color-primary);
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    display: block;
+}
+
+/* ---------------------------------------------------- */
+/* Estilos Específicos del Perfil */
+/* ---------------------------------------------------- */
+
+.profile-management {
+    background-color: var(--color-white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.profile-management h3 {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#artistProfileForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--color-text-dark);
+    font-size: 0.95em;
+}
+
+input[type="url"],
+input[type="email"],
+input[type="tel"],
+textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(104, 100, 112, 0.2);
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Grupo de URLs Oculto (Social Media) */
+#social-urls-group {
+    border: 1px dashed var(--color-secondary);
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.oculto {
+    display: none;
+}
+
+.form-group-url {
+    margin-bottom: 10px;
+}
+
+/* Botón de Enlace/Toggle (Mostrar Redes Sociales) */
+.link-button {
+    background-color: var(--color-link-button);
+    color: var(--color-white);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    width: auto; /* Para que el botón no ocupe todo el ancho */
+}
+
+.link-button:hover {
+    background-color: #388e3c;
+}
+
+.link-button .icon {
+    font-size: 1.2em;
+}
+
+/* Botón de Actualizar */
+.update-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    align-self: flex-end; /* Lo alinea a la derecha del formulario */
+}
+
+.update-button:hover {
+    background-color: #8350e2;
+}
+
+/* Mensaje de estado */
+.message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Estilos de footer */
+footer {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}

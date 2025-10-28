@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.removeItem("userRole")
                 sessionStorage.removeItem("username")
                 sessionStorage.removeItem("userId")
-                message.textContent = 'No tienes permisos para acceder a esta página. Redirigiendo...';
+                message.textContent = 'Error al mostrar los artistas. Redirigiendo...';
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 3000);
