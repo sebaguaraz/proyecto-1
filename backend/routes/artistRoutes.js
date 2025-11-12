@@ -43,7 +43,7 @@ router.get("/profile/:id", protect, authorize(["admin","artist"]), artistControl
 // - Si 'protect' pasa, entonces 'artistController.updateArtistProfile' se ejecuta:
 //   Contiene la lógica para actualizar los datos del perfil en la DB, y las comprobaciones de seguridad
 //   (si el usuario logueado tiene permiso para modificar ese perfil).
-router.put("/profile/:id", protect, authorize(["artist"]),artistController.updateArtistProfile);
+router.put("/profile/:id", protect, authorize(["artist", "admin"]),artistController.updateArtistProfile);
 
 
 // 3. Ruta para OBTENER TODOS los perfiles de artistas.

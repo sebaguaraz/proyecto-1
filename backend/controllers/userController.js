@@ -1,9 +1,8 @@
-const User = require("../models/User");
-const Logs = require("../models/Logs");
+const UserService = require("../services/userService");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await UserService.getAllUsers();
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: "Error al obtener usuarios" });
@@ -13,32 +12,32 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-    res.status(200).json(user);
+    const user = await UserService.getUserById(id);
+    res.status(user.status).json(user.data);
   } catch (err) {
-    res.status(500).json({ message: "Error al buscar el usuario" });
+    const status = err && err.status ? err.status : 500;
+    const message = err && err.message ? err.message : "Error al buscar el usuario";
+    res.status(status).json({ message });
   }
 };
 
+// Actualizar un usuario (protegido) POR EL ADMIN 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-
-  if (req.user.role === "artist" && req.user.id !== parseInt(id)) {
-    return res.status(403).json({ message: "No tienes permiso para actualizar este usuario" });
-  }
+  const requesterId = req.user.id;
+  const requesterName = req.user.username;
 
   try {
-    const result = await User.update(id, data);
-    if (!result) {
-      return res.status(404).json({ message: "Usuario no encontrado para actualizar o sin cambios" });
-    }
-    res.status(200).json({ message: "Usuario actualizado con éxito" });
+
+    const result = await UserService.updateUser(id, data, requesterId, requesterName);
+    res.status(200).json(result);
+
   } catch (err) {
-    res.status(500).json({ message: "Error al actualizar el usuario" });
+    console.error("Error al actualizar usuario:", err);
+    const status = err && err.status ? err.status : 500;
+    const message = err && err.message ? err.message : "Error al actualizar el usuario";
+    res.status(status).json({ message });
   }
 };
 
@@ -48,19 +47,12 @@ exports.deleteUser = async (req, res) => {
   const requesterName = req.user.username;
 
   try {
-    const userExists = await User.findById(id);
-    if (!userExists) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
 
-    const result = await User.delete(id);
-    if (!result) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    await Logs.create(requesterId, `${requesterName} Elimino el usuario con ID ${id}`);
-    res.status(200).json({ message: "Usuario eliminado con éxito" });
+    const result = await UserService.deleteUser(id, requesterId, requesterName);
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ message: "Error al eliminar el usuario" });
+    const status = err && err.status ? err.status : 500;
+    const message = err && err.message ? err.message : "Error al eliminar el usuario";
+    res.status(status).json({ message });
   }
 };

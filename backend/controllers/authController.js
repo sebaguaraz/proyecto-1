@@ -1,80 +1,39 @@
-const bcrypt = require("bcryptjs");   // Esto es como un "candado súper seguro" para guardar contraseñas.
-const jwt = require("jsonwebtoken");  // Esto es como un "pasaporte especial" que te permite pasar.
-const User = require("../models/User"); // Traemos las "reglas" de cómo son nuestros usuarios.
-const Artist = require("../models/Artist") // Traemos las "reglas" de cómo son nuestros artistas.
-const Role = require("../models/Role"); // <-- Corrección aquí
-const Logs = require("../models/Logs");
+const AuthService = require("../services/authService");
 
 
 exports.register = async (req, res) => {
     const { username, password } = req.body; // Datos que vienen del formulario
-    const nombreRol = "artist"; // El rol que queremos asignar por defecto
 
-    const nombresProhibidos = ["Eminem", "Dua Lipa", "Catriel", "Paco Amoroso"];
-    if (nombresProhibidos.includes(username)) {
-        return res.status(403).json({ error: "Nombre de artista prohibido. Elige otro nombre." });
-    }
 
     // TRY/CATCH: los errores de "lógica de negocio" (como que el usuario ya exista o que el rol no exista) los manejo directamente con `return res.status(...)` porque son errores esperados que queremos comunicar al cliente de manera específica.
     // El bloque `catch` atrapa errores inesperados, como errores de conexión a la base de datos, errores de sintaxis, etc.
 
     try {
-        const usuarioExistente = await User.findByUsername(username);
-        if (usuarioExistente) {
-            return res.status(400).json({ error: "Ese nombre de usuario ya está en uso" });
-        }
-
-        const rolEncontrado = await Role.findByName(nombreRol); // = { id: 1 } luego para acceder al id: rolEncontrado.id
-        if (!rolEncontrado) {
-            return res.status(500).json({ error: "El rol 'artist' no existe en la base de datos" });
-        }
-
-        const resultadoUsuario = await User.create(username, password, rolEncontrado.id);
-
-        await Logs.create(resultadoUsuario.insertId, `${username} se ha registrado al sistema`);
-
-        await Artist.create(resultadoUsuario.insertId, username);
-
-        return res.status(201).json({
-            message: "Registro exitoso: usuario y perfil de artista creados correctamente",
-        });
+        const resultado = await AuthService.register(username, password);
+        return res.status(resultado.status).json({ message: resultado.message });
 
     } catch (error) {
         console.error("Error inesperado en registro:", error);
-        return res.status(500).json({ error: "Error interno del servidor durante el registro" });
+        const status = error && error.status ? error.status : 500;
+        const message = error && error.message ? error.message : "Error interno del servidor al actualizar el perfil.";
+        return res.status(status).json({ message });
     }
 };
 
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;  // Sacamos username y password que envió el cliente en la petición
+
     try {
-        const usuarioExistente = await User.findByUsername(username);
-        if (!usuarioExistente) {
-            return res.status(400).json({ error: "Credenciales inválidas" });
-        }
-
-        const isMatch = await bcrypt.compare(password, usuarioExistente.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: "Credenciales inválidas" });
-        }
-
-        const token = jwt.sign(
-            {
-                id: usuarioExistente.id,
-                username: usuarioExistente.username,
-                role: usuarioExistente.role,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        )
-
-        return res.json({ token, role: usuarioExistente.role, userId: usuarioExistente.id, username: usuarioExistente.username });
+        const resultado = await AuthService.login(username, password);
+        return res.status(200).json(resultado);
 
     } catch (error) {
         // Errores del sistema (base de datos, etc.)
         console.error("Error inesperado en login:", error);
-        return res.status(500).json({ error: "Error interno del servidor" });
+        const status = error && error.status ? error.status : 500;
+        const message = error && error.message ? error.message : "Error interno del servidor al iniciar sesión.";
+        return res.status(status).json({ message });
     }
 };
 

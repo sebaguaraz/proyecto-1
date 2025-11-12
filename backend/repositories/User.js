@@ -7,9 +7,9 @@ const bcrypt = require("bcryptjs");  // Importa bcrypt para hashear contraseñas
 // SIEMPRE devuelve un array con 2 elementos: [results, fields]
 
 // results → Tus datos (lo que te interesa)
-const User = {
+class UserRepository {
   // Busca un usuario por su username y trae también el nombre de su rol.
-    async findByUsername (username) {
+  async findByUsername(username) {
     const query = `
       SELECT -- Selecciona TODAS las columnas de la tabla 'users'.
         users.id,
@@ -29,34 +29,40 @@ const User = {
 
     const [results] = await db.query(query, [username]); // db.query devuelve un array con 2 elementos: [results, fields], results es un array con los resultados de la consulta
     return results[0] || null;
-  },
+  };
 
   // Crea un usuario (hashea la contraseña antes de guardar)
-  async create (username, plainPassword, role_id) {
+  async create(username, plainPassword, role_id) {
     const saltRounds = 10; // Coste del hasheo (balance entre seguridad y rendimiento)
-    const hashedPassword =  await bcrypt.hash(plainPassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 
     const query = "INSERT INTO users (username, password, role_id) VALUES (?, ?, ?)";
     const [result] = await db.query(query, [username, hashedPassword, role_id]);
     return result;
-  },
+  };
 
   // Listar todos los usuarios
-  async findAll () {
-    const query = "SELECT * FROM users";  // Define la consulta para obtener todos los usuarios.
+  async findAll() {
+    const query = `
+    SELECT 
+    users.id, 
+    users.username, 
+    roles.name as role_id
+    FROM users 
+    INNER JOIN roles ON users.role_id = roles.id`;  // Define la consulta para obtener todos los usuarios.
     const [results] = await db.query(query);
-    return results[0] || null;
-  },
+    return results || [];
+  };
 
   // Buscar un usuario por ID
-  async findById (id) {
+  async findById(id) {
     const query = "SELECT * FROM users WHERE id = ?";  // Define la consulta para buscar por ID.
     const [results] = await db.query(query, [id]);
     return results[0] || null;
-  },
+  };
 
   // Actualizar un usuario (¡Hashea la contraseña si se proporciona!)
-  async update (id, data) {
+  async update(id, data) {
     // Verificar si se está enviando una nueva contraseña para actualizar
     if (data.password) {
       // Hashear la nueva contraseña antes de actualizar
@@ -66,19 +72,20 @@ const User = {
 
     const query = "UPDATE users SET ? WHERE id = ?";  // Define la consulta de actualización.
     const [result] = await db.query(query, [data, id]);
-    
-    return result.affectedRows > 0 ? result : null  
 
-    
-  },
+    return result.affectedRows > 0 ? result : null
 
-  async delete (id) {
+
+  };
+
+  async delete(id) {
     const query = "DELETE FROM users WHERE id = ?";  // Define la consulta de eliminación.
     const [result] = await db.query(query, [id]);
 
-    return result.affectedRows > 0 ? result : null  
-  }
+    return result.affectedRows > 0 ? result : null
+  };
+  
 };
 
 /* En resumen: Este archivo importa la conexión a la base de datos (db) y la herramienta para hashear contraseñas (bcrypt). Luego, define un objeto User que contendrá todas las operaciones específicas para la tabla users y lo exporta para que los controladores puedan usarlo.*/
-module.exports = User;  // Exporta el modelo User.
+module.exports = new UserRepository();  // Exporta el modelo User.

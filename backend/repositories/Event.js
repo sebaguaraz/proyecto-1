@@ -1,6 +1,6 @@
 const db = require("./db");
 
-const Event = {
+class EventRepository {
   // Aquí definiremos las funciones para crear, leer, actualizar y borrar eventos
   // Por ejemplo: create, findById, findAllByArtist, update, delete
   /**
@@ -36,19 +36,35 @@ const Event = {
     } = existingEvent;
     const [result] = await db.query(query, [artist_id, entry_modes_id, title, date, time, location, price, flyer_url]);
     return result
-  },
+  };
 
-  /**
-   * Busca un evento por su ID.
-   * @param {number} id - ID del evento a buscar.
-   * @param {function} callback - Función a ejecutar tras la consulta (err, event).
-   */
+  async findByEntryMode(entrada) {
+
+    const query = `SELECT 
+      events.id,
+      artists.id as artist_id,
+      artists.username as name,
+      events.title,
+      events.date,
+      events.time,
+      events.location,
+      entry_modes.name as entry_mode,
+      events.price,
+      events.flyer_url
+    FROM events
+    INNER JOIN artists ON events.artist_id = artists.id
+    INNER JOIN entry_modes ON events.entry_modes_id = entry_modes.id
+    WHERE entry_modes.id = ? ORDER BY date DESC`;
+    const [results] = await db.query(query, [entrada]);
+    return results || [];
+  };  
+  
   async findById(id) {
 
     const query = `SELECT 
       events.id,
+      artists.id as artist_id,
       artists.username as name,
-      events.artist_id,
       events.title,
       events.date,
       events.time,
@@ -62,7 +78,7 @@ const Event = {
     WHERE events.id = ? `;
     const [results] = await db.query(query, [id]);
     return results[0] || null;
-  },
+  };
 
   /**
    * Busca todos los eventos de un artista específico.
@@ -72,6 +88,7 @@ const Event = {
   async findAllByArtistName(artistName) {
     const query = `SELECT
       events.id,
+      artists.id as artist_id,
       artists.username as name,
       events.title,
       events.date,
@@ -86,17 +103,29 @@ const Event = {
       WHERE artists.username = ? ORDER BY date DESC`;
     const [results] = await db.query(query, [artistName]);
     return results || [];
-  },
+  };
 
   /**
    * Busca todos los eventos (útil para una cartelera general o un administrador).
    * @param {function} callback - Función a ejecutar tras la consulta (err, events).
    */
   async findAll() {
-    const query = "SELECT * FROM events ORDER BY date DESC";
+    const query = `SELECT 
+      events.id, 
+      artists.username as name, 
+      events.title, 
+      events.date, 
+      events.time, 
+      events.location, 
+      entry_modes.name as entry_mode, 
+      events.price, 
+      events.flyer_url 
+      FROM events 
+      INNER JOIN entry_modes ON events.entry_modes_id = entry_modes.id
+      INNER JOIN artists ON events.artist_id = artists.id ORDER BY date DESC `;
     const [results] = await db.query(query);
     return results || [];
-  },
+  };
 
   /**
    * Actualiza un evento existente.
@@ -108,7 +137,7 @@ const Event = {
     const query = "UPDATE events SET ? WHERE id = ?";
     const [result] = await db.query(query, [existingEvent, id]);
     return result.affectedRows > 0 ? result : null;
-  },
+  };
 
   /**
    * Elimina un evento por su ID.
@@ -119,7 +148,8 @@ const Event = {
     const query = "DELETE FROM events WHERE id = ?";
     const [result] = await db.query(query, [id]);
     return result.affectedRows > 0 ? result : null;
-  }
+  };
+  
 };
 
-module.exports = Event;
+module.exports = new EventRepository();
