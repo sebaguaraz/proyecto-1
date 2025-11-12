@@ -1,32 +1,150 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Panel Admin - Musicalendaria</title>
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/adminDashboard.css">
 </head>
+
 <body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="content-logo">
+                <img src="img/logo-musica.jpg" class="logo" alt="Logo Conexión Musical">
+            </div>
+            <h1>Panel de Moderación de Administrador</h1>
+
+            <ul class="nav-links">
+                <li>
+                    <button class="logout-button" id="logoutButton" type="button">
+                        <a href="#" id="logoutButton">Cerrar Sesión</a>
+                    </button>
+                </li>
+            </ul>
+
+        </nav>
+    </header>
+
+
     <main class="container">
-        <h2>Panel de Moderación de Artistas</h2>
-        <button id="logoutButton" class="logout-btn">Cerrar Sesión</button>
-        <button id="showArtistsButton" class="main-btn">Ver Artistas registrados</button>
         <div id="message" class="message" style="display: flex;"></div>
+
+        <h2>Bienvenido a su panel, <span id="usernameDisplay"></span></h2>
+        <button id="showArtistsButton" class="main-btn">Ver Usuarios registrados</button>
         <table id="artistTable">
             <thead>
                 <tr>
-                    <th >Foto de perfil</th>
-                    <th>Nombre Artístico</th>
-                    <th >Email</th>
-                    <th >Telefono</th>
-                    <th >Acciones</th>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-
             <tbody id="artistTableBody">
-                
-            </tbody>
 
+            </tbody>
         </table>
+
+        <form id="updateFormUser" class="oculto update-form">
+            <div class="form_left">
+                <span id="userIdForm"></span>
+            </div>
+            <div class="form_rigth">
+                <label for="role">Rol:</label>
+                <select id="role" name="role_id">
+                    <option value="1">Artist</option>
+                    <option value="2">Admin</option>
+                </select>
+
+            </div>
+            <div class="form_buttons">
+                <button type="submit">Actualizar</button>
+                <button type="button" class="cancel-btn" id="cancel-btn">Cancelar</button>
+
+            </div>
+        </form>
+
+
+        <button id="showEventsButton" class="main-btn">Ver Eventos registrados</button>
+        <table id="EventTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Artista</th>
+                    <th>Modo de entrada</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Ubicación</th>
+                    <th>Precio</th>
+                    <th>Acción</th>
+
+                </tr>
+            </thead>
+            <tbody id="EventTableBody">
+
+            </tbody>
+        </table>
+
+        <form id="editEventForm" class="oculto event-form">
+            <div class="form-row">
+                <span id="eventIdForm"></span>
+            </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="editEventTitle">Título del Evento (*)</label>
+                    <input type="text" id="editEventTitle" name="eventTitle" placeholder="Nombre del evento" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editEventDate">Fecha (*)</label>
+                    <input type="date" id="editEventDate" name="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEventTime">Hora (*)</label>
+                    <input type="time" id="editEventTime" name="eventTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEntryMode">Modo de entrada (*)</label>
+                    <select id="editEntryMode" name="entryMode" required>
+                        <option value="">Seleccionar modo</option>
+                        <option value="gratuito">Gratuito</option>
+                        <option value="gorra">Gorra</option>
+                        <option value="beneficio">Beneficio</option>
+                        <option value="arancelado">Arancelado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="editLocation">Ubicación (*)</label>
+                    <input type="text" id="editLocation" name="location"
+                        placeholder="Ej: Parque Central o Nombre del Bar" required>
+                </div>
+                <div class="form-group" id="editPriceGroup">
+                    <label for="editPrice">Precio (USD)</label>
+                    <input type="number" id="editPrice" name="price" step="0.01" min="0">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="editFlyerUrl">URL del Flyer/Imagen promocional</label>
+                <input type="url" id="editFlyerUrl" name="flyerUrl" placeholder="https://example.com/imagen.jpg">
+            </div>
+
+            <div class="form-actions full-width">
+                <button type="submit" class="btn-submit">Actualizar Evento</button>
+                <button type="button" id="cancelEditButton" class="btn-cancel">Cancelar</button>
+            </div>
+        </form>
+
+
+
 
         <button id="showLogsButton" class="main-btn">Ver registros de acciones</button>
         <table id="logTable">
@@ -38,13 +156,14 @@
                 </tr>
             </thead>
             <tbody id="logTableBody">
-                
+
             </tbody>
         </table>
     </main>
     <footer class="footer">
-        <p>© 2024 Musicalendaria - Panel de Administración</p>
+        <p>© 2025 Musicalendaria - Panel de Administración</p>
     </footer>
     <script src="./js/adminDashboard.js"></script>
 </body>
+
 </html>

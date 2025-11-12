@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const Event_form = document.getElementById("editEventForm");
 
+    const cancelEditButton = document.getElementById("cancelEditButton");
+
 
     const token = sessionStorage.getItem("token");
     const username = sessionStorage.getItem("username");
@@ -25,23 +27,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         return
     }
 
-    artistName.textContent = username
+    artistName.textContent = username;
 
     async function getEvents() {
 
         const ConfigObject = {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-
+            method: "GET"
+            , headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             }
         }
         try {
 
             let response = await fetch(`/api/events/eventByArtist/${username}`, ConfigObject)
 
-            let data = await response.json();
 
+            if (response.status === 204) {
+                showEvents([]);
+                return;
+            }
+
+            let data = await response.json();
             showEvents(data);
 
 
@@ -64,6 +71,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             messageCell.textContent = "No hay eventos registrados"
             MessageRow.appendChild(messageCell)
             eventTableBody.appendChild(MessageRow)
+            // Asegurarse de que el formulario de edición esté oculto cuando no hay eventos
+            if (Event_form) Event_form.classList.add("oculto");
             return
 
         }
@@ -122,9 +131,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-            button_delete.addEventListener("click", deleteEvent);
-            button_edit.addEventListener("click", showFormEditEvent);
-            
+            button_delete.addEventListener("click", (event) => deleteEvent(event));
+            button_edit.addEventListener("click", (event) => showFormEditEvent(event));
+
 
 
         })
@@ -140,23 +149,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // 2. ¡EL PASO CLAVE! Guardamos el ID en el formulario
-        // 'handleFormSubmit' podrá leer esto después
-        Event_form.dataset.editingId = id;
+        // 3. Mostramos el formulario explícitamente
+        if (Event_form) {
+            Event_form.classList.remove("oculto");
+            // Reemplazamos el handler anterior para evitar listeners duplicados
+            Event_form.onsubmit = (e) => handleFormSubmit(e, id);
+        }
 
-        // 3. Mostramos el formulario
-        Event_form.classList.remove("oculto"); // Usar 'remove' es más seguro que 'toggle'
-
-        // ¡Ya no leemos FormData aquí!
-        // Eso se hará en 'handleFormSubmit'
     }
 
-    
+
     /**
      * Esta función se llama cuando se HACE SUBMIT en el formulario.
      * Su trabajo es recolectar los datos y llamar a 'updateEvent'.
      */
-    async function handleFormSubmit(event) {
+    async function handleFormSubmit(event, id) {
 
         // 1. ¡Evita que la página se recargue!
         event.preventDefault();
@@ -164,23 +171,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 2. Obtenemos los datos del formulario
         const form_data = new FormData(Event_form);
         const data = Object.fromEntries(form_data.entries());
-        
-        // 3. Recuperamos el ID que guardamos en el formulario
-        const id = Event_form.dataset.editingId;
 
-        if (!id) {
-            console.error("Error: No se encontró ID en el formulario al intentar guardar.");
-            return;
-        }
 
         // 4. ¡Ahora sí! Llamamos a la función de actualización y esperamos su resultado
-        const success = await updateEvent(id, data);
-        
-        // 5. Si la actualización fue exitosa, ocultamos el formulario
-        if (success) {
-            Event_form.classList.add("oculto");
-            delete Event_form.dataset.editingId; // Limpiamos el ID para la próxima vez
-        }
+        await updateEvent(id, data);
+
+
+
     }
 
 
@@ -207,27 +204,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             alert("Evento editado con éxito");
             getEvents(); // Actualizamos la tabla con los nuevos datos
-            return true; // Devolvemos true para indicar éxito
 
         } catch (error) {
             console.error("Error en el servidor", error);
             alert(error.message); // Mostramos un error más claro al usuario
-            return false; // Devolvemos false para indicar fallo
         }
     }
-    
 
-    // 6. Este es el listener que une todo.
-    // Escucha el evento 'submit' EN EL FORMULARIO y llama a 'handleFormSubmit'.
-    Event_form.addEventListener("submit", handleFormSubmit);
-    
-    
-    
-    
-    
+
+
+
+
 
     async function deleteEvent(event) {
-        let id = event.target.id;
+        const id = event.target.id;
 
         if (!id) {
             console.error("No event ID provided");
@@ -242,15 +232,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            if (!response.ok) {
-                throw new Error("No tienes permisos para eliminar este evento.");
+            // ✅ CORREGIDO: Maneja respuesta 204 para DELETE exitoso
+            if (response.status === 204) {
+                alert("Evento eliminado con éxito");
+                await getEvents();
+                return;
             }
 
-            getEvents();
-            Event_form.classList.add("oculto"); // Ocultamos el formulario
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "No tienes permisos para eliminar este evento.");
+            }
+
+            const data = await response.json();
+            alert("Evento eliminado con éxito");
+            await getEvents();
 
         } catch (error) {
             console.error("Error en el servidor", error);
+            alert(error.message);
         }
     }
 
@@ -258,6 +258,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
+    cancelEditButton.addEventListener("click", () => {
+        Event_form.classList.toggle("oculto");
+        Event_form.reset();
+
+    })
 
 
 

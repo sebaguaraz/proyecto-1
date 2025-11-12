@@ -41,30 +41,33 @@
                                 <button class="action-button" id="createEvent">Crear Evento</button>
                             </th> -->
                             <th colspan="3">
-                                    <form class="form-group" id="form-entry_mode">
-                                        <label for="entry_mode" style="color: rgb(148, 143, 143); margin-bottom: 4px;">Modo de entrada</label>
-                                        <select id="entry_mode" name="entry_mode" class="entry_mode">
-                                            <option value="1">gratuito</option>
-                                            <option value="2" >gorra</option>
-                                            <option value="3">beneficio</option>
-                                            <option value="4">arancelado</option>
-                                        </select>
-                                        <button type="submit">
-                                            Filtrar
-                                        </button>
-                                    </form>
+                                <form class="form-group" id="form-entry_mode">
+                                    <label for="entry_mode" style="color: rgb(148, 143, 143); margin-bottom: 4px;">Modo
+                                        de entrada</label>
+                                    <select id="entry_mode" name="entry_mode" class="entry_mode">
+                                        <option value="1">gratuito</option>
+                                        <option value="2">gorra</option>
+                                        <option value="3">beneficio</option>
+                                        <option value="4">arancelado</option>
+                                    </select>
+                                    <button type="submit">
+                                        Filtrar
+                                    </button>
+                                </form>
                             </th>
 
-                            <th colspan="4">
+                            <th colspan="7">
                                 <form class="search-form" id="search-form">
                                     <label for="name_event"></label>
-                                    <input type="text" class="search-input" id="name_event" name="name_event"  placeholder="Buscar por nombre del artista...">
+                                    <input type="text" class="search-input" id="name_event" name="name_event"
+                                        placeholder="Buscar por nombre del artista...">
                                     <button type="submit">Buscar</button>
 
                                 </form>
                             </th>
                         </tr>
                         <tr>
+                            <th>#</th>
                             <th>Título</th>
                             <th>Artista</th>
                             <th>Modo de entrada</th>
@@ -77,17 +80,17 @@
                     </thead>
                     <tbody id="eventTableBody">
 
-                        
+
                         <tr class="total">
                             <td colspan="10">No hay eventos registrados </td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
             </div>
         </section>
 
-        
+
     </main>
 </body>
 

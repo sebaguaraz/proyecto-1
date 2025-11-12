@@ -12,20 +12,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         eventTableBody.textContent = ""
 
-        if (!Array.isArray(event) || event.length === 0) {
+        if (event.length === 0) {
             const MessageRow = document.createElement("tr")
             const messageCell = document.createElement("td")
             messageCell.textContent = "No hay evento registrado"
             MessageRow.appendChild(messageCell)
             eventTableBody.appendChild(MessageRow)
-            return
+            return;
 
         }
 
         event.forEach(ev => {
             const EventRow = document.createElement("tr");
+            const idCell = document.createElement("td");
             const titleCell = document.createElement("td");
             const artistCell = document.createElement("td");
+            // const artist_a = document.createElement("a");
+
             const Entry_ModeCell = document.createElement("td");
             const DateCell = document.createElement("td");
             const TimeCell = document.createElement("td");
@@ -33,16 +36,26 @@ document.addEventListener("DOMContentLoaded", async function () {
             const PriceCell = document.createElement("td");
             const FlyerCell = document.createElement("td");
 
+            idCell.textContent = ev.id || "N/A";
             titleCell.textContent = ev.title;
+
+            // artist_a.href = `/profileArtist/${ev.artist_id}`;
+            // artist_a.textContent = ev.name;
             artistCell.textContent = ev.name;
             Entry_ModeCell.textContent = ev.entry_mode;
-            DateCell.textContent = ev.date;
+            DateCell.textContent = new Date(ev.date).toLocaleDateString();
             TimeCell.textContent = ev.time;
             LocationCell.textContent = ev.location;
             PriceCell.textContent = ev.price || "N/A";
             FlyerCell.textContent = ev.flyer_url || "N/A";
+            
 
+            EventRow.appendChild(idCell);
             EventRow.appendChild(titleCell);
+            
+            // artistCell.appendChild(artist_a);
+            // EventRow.appendChild(artistCell);
+
             EventRow.appendChild(artistCell);
             EventRow.appendChild(Entry_ModeCell);
             EventRow.appendChild(DateCell);
@@ -61,13 +74,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         event.preventDefault()
         const artistName = event.target.name_event.value
+        console.log(artistName)
 
         if (!artistName) {
             alert("ingrese un Nombre valido")
             return
         }
 
-        console.log(artistName)
 
         try {
             const response = await fetch(`/api/events/eventByArtist/${artistName}`, {
@@ -76,9 +89,15 @@ document.addEventListener("DOMContentLoaded", async function () {
                     "Content-Type": "application/json"
                 }
             })
+
+            if (response.status === 204) {
+                await displayEvent([])
+                return;
+            }
+
             const event = await response.json()
 
-            if (!event.ok) {
+            if (!response.ok) {
                 statusMessage.textContent = event.message;
                 statusMessage.style.color = "red";
                 return;
@@ -108,19 +127,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         try {
 
-            const response = await fetch(`/api/events/${entrada}`)
+            const response = await fetch(`/api/events/${entrada}`, {method: "GET"})
 
-            const data = await response.json()
-
-            if (!data.ok) {
-                statusMessage.textContent = data.message
+            if(response.status === 204){
+                await displayEvent([])
+                return;
+            }
+            const event = await response.json()
+            
+            if (!response.ok) {
+                statusMessage.textContent = event.message
                 statusMessage.style.color = "red"
                 return
             }
 
             statusMessage.textContent = ""
 
-            displayEvent(data)
+            displayEvent(event)
 
 
         } catch (error) {
@@ -131,23 +154,35 @@ document.addEventListener("DOMContentLoaded", async function () {
     })
 
 
+    const showAllEvents = async () => {
+
+        try {
+            const response = await fetch(`/api/events/allEvents`, {method:"GET"});
+            
+            if (response.status === 204) {
+                await displayEvent([]);
+                return;
+            }
+
+            const event = await response.json();
+
+            if(!response.ok){
+                statusMessage.textContent = event.message
+                statusMessage.style.color = "red"
+                return
+            }
+
+            statusMessage.textContent = ""
+
+            displayEvent(event);
+        } catch (error) {
+            console.error("Fallo al obtener todos los eventos", error)
+        }
+
+    }       
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    showAllEvents();
 
 })

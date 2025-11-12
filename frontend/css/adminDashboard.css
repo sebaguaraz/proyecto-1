@@ -1,75 +1,410 @@
+:root {
+    --color-primary: #686470;
+    /* Morado Oscuro (Principal) */
+    --color-secondary: #c7c3cf;
+    /* Morado Claro (Acento) */
+    --color-text-dark: #333333;
+    --color-white: #ffffff;
+    --color-sidebar-bg: #3a3f57;
+    /* Fondo gris oscuro para sidebar */
+    --color-table-header: #493fa1bd;
+    /* Color de encabezado de tabla */
+    --color-action-button-primary: #007bff;
+    /* Azul para botones de acción */
+    --color-action-button-hover: #0056b3;
+    --color-delete-button: #dc3545;
+    /* Rojo para eliminar */
+    --color-link-button: #4CAF50;
+    /* Verde para el botón de enlace/toggle */
+}
+
+html,
 body {
-    background: #f7f7f7;
-    font-family: Arial, sans-serif;
+    height: 100%;
+    /* Muy importante para que el body ocupe toda la altura */
+
 }
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    padding: 30px;
+
+body {
+    display: flex;
+    flex-direction: column;
+    /* Esto hace que el body sea un contenedor flex en columna */
 }
+
+header {
+    background-color: var(--color-primary);
+    display: flex;
+    position: fixed;
+    /* Esto hace que el header esté fijo en la parte superior */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    width: 100%;
+    /* Asegurar que ocupe todo el ancho */
+}
+
+/* Añadimos un padding al main para que el contenido no quede debajo del header fijo */
+main {
+    flex-grow: 1;
+    margin-top: 120px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+    align-items: center;
+}
+
+.content-logo {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    box-shadow: 8px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.logout-button {
+    padding: 10px 15px;
+    /* Ajustado el padding para el texto interno */
+    background-color: #2f0877;
+    border-radius: 20px;
+    border: 1px solid rgba(150, 145, 145, 0.418);
+    box-shadow: 4px 4px 8px rgba(65, 64, 64, 0.3);
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #bcafcf8c;
+    border-color: rgba(150, 145, 145, 0.418);
+    box-shadow: 4px 4px 8px rgba(65, 64, 64, 0.3);
+}
+
 h2 {
     text-align: center;
     color: #333;
+    width: 100%;
     margin-bottom: 25px;
 }
-.logout-btn, .main-btn {
-    background: #e74c3c;
+
+#usernameDisplay {
+    text-align: center;
+    color: var(--color-action-button-hover);
+    margin-bottom: 25px;
+}
+
+.logout-btn,
+.main-btn {
     color: #fff;
     border: none;
     padding: 8px 18px;
     border-radius: 5px;
     cursor: pointer;
+    margin: 15px;
     margin-bottom: 10px;
     margin-right: 10px;
 }
+
 .main-btn {
     background: #3498db;
 }
+
 .message {
     margin: 15px 0;
     padding: 10px;
     border-radius: 5px;
     font-weight: bold;
-    display: none;
+    display: flex;
 }
-.message.success {
+
+.message-success {
     background: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
+    margin-top: 10px;
+
 }
-.message.error {
+
+.message-error {
     background: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+    margin-top: 10px;
+    /* Esto estaba afectando el layout */
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 25px;
 }
-th, td {
+
+th,
+td {
     padding: 10px;
     border-bottom: 1px solid #eee;
     text-align: left;
 }
+
 th {
     background: #f0f0f0;
 }
+
 .delete-btn {
     background: #c0392b;
+    color: #fff;
+    border: none;
+    margin-right: 10px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #721b12;
+}
+
+.edit-btn {
+    background: var(--color-action-button-primary);
     color: #fff;
     border: none;
     padding: 6px 14px;
     border-radius: 4px;
     cursor: pointer;
 }
-.delete-btn:hover {
-    background: #a93226;
+
+.edit-btn:hover {
+    background: var(--color-action-button-hover);
 }
-.prohibido {
-    color: #e74c3c;
+
+
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-size: 18px;
     font-weight: bold;
+    padding: 50px 50px;
+}
+
+
+.update-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 40%;
+    margin: 30px;
+    align-items: center;
+    justify-content: start;
+    border: 1px solid #31302f;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.342);
+}
+
+.update-form .form_left {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 5px 0px;
+    gap: 4px;
+}
+
+.update-form .form_rigth {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 5px;
+    margin: 5px 0px;
+    margin-bottom: 10px;
+}
+
+.update-form input {
+    width: 20%;
+    /* Esto es muy pequeño para un input, ¿seguro quieres 20% del 40% del ancho? */
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.update-form .form_buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.update-form button {
+    background-color: var(--color-primary);
+    padding: 8px;
+    margin-left: 10px;
+    color: var(--color-white);
+    font-size: 15px;
+    border-radius: 15px;
+    border: none;
+}
+
+.oculto {
+    display: none;
+}
+
+.oculto-form {
+    display: none;
+}
+
+#usernameForm {
+    color: var(--color-action-button-primary);
+    font-weight: bold;
+}
+
+/* Estilos del Formulario de Edición */
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 40%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-white);
+    margin-top: 20px;
+}
+
+/* Asegurar que el formulario de eventos o formularios de actualización se oculten
+   aunque .event-form o .update-form declaren display más abajo en el archivo CSS. */
+.event-form.oculto,
+.update-form.oculto {
+    display: none;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex: 1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.form-group.full-width {
+    flex: none;
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--color-text-dark);
+    font-size: 0.95em;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="url"],
+input[type="number"],
+select,
+textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(104, 100, 112, 0.2);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 10px;
+}
+
+.btn-submit {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #8350e2;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: var(--color-white);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #a1acb4;
 }
