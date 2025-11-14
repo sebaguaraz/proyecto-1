@@ -44,7 +44,7 @@ exports.createEvent = async (eventData, loggedInUser) => {
 
     await LogsRepository.create(loggedInUser.id, `${loggedInUser.username} Creó un nuevo evento: ${eventData.eventTitle}`);
 
-    return { status: 201, message: "Evento creado con éxito" };
+    return { message: "Evento creado con éxito" };
 
 
 
@@ -58,7 +58,7 @@ exports.getAllEvents = async () => {
     const events = await EventRepository.findAll();
     if (!events || events.length === 0) throw { status: 204, message: "No se encontraron eventos." };
 
-    return { status: 200, message: events };
+    return { message: events };
 
 
 };
@@ -87,7 +87,7 @@ exports.getEventsByArtistName = async (artistName) => {
 
     if (!events || events.length === 0) throw { status: 204, message: [] };
 
-    return { status: 200, message: events };
+    return { message: events };
 
 
 
@@ -127,7 +127,7 @@ exports.updateEvent = async (id, eventData, loggedInUser) => {
 
         const updateEvent = await EventRepository.update(id, existingEvent);
 
-        return { status: 200, message: updateEvent };
+        return { message: updateEvent };
 
     } else if (loggedInUser.role === 'artist') {
         const artist = await ArtistRepository.findByUserId(loggedInUser.id);
@@ -154,7 +154,7 @@ exports.updateEvent = async (id, eventData, loggedInUser) => {
 
         const updateEvent = await EventRepository.update(id, existingEvent);
 
-        return { status: 200, message: updateEvent };
+        return { message: updateEvent };
 
     } else {
         throw { status: 403, message: "No tienes permisos para actualizar eventos." };
@@ -190,7 +190,7 @@ exports.deleteEvent = async (id, loggedInUser) => {
 
         await LogsRepository.create(loggedInUser.id, `${loggedInUser.username} Eliminó el evento con id: ${id}`);
 
-        return { status: 200, message: "Evento eliminado con éxito." };
+        return { message: "Evento eliminado con éxito." };
 
     } else if (loggedInUser.role === "admin") {
 
@@ -198,7 +198,7 @@ exports.deleteEvent = async (id, loggedInUser) => {
 
         await LogsRepository.create(loggedInUser.id, `${loggedInUser.username} Eliminó el evento con id: ${id}`);
 
-        return { status: 200, message: "Evento eliminado con éxito." };
+        return { message: "Evento eliminado con éxito." };
     }
 
 

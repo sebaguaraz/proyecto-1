@@ -9,7 +9,7 @@ exports.createEvent = async (req, res) => {
   try {
 
     const result = await EventService.createEvent(eventData, loggedInUser);
-    return res.status(result.status).json(result.message);
+    return res.status(201).json(result.message);
 
   } catch (error) {
     const status = error && error.status ? error.status : 500;
@@ -26,7 +26,7 @@ exports.getAllEvents = async (req, res) => {
   try {
 
     const result = await EventService.getAllEvents();
-    res.status(result.status).json(result.message);
+    res.status(200).json(result.message);
 
   } catch (error) {
 
@@ -68,7 +68,7 @@ exports.getEventsByArtistName = async (req, res) => {
     const { artistName } = req.params;
 
     const events = await EventService.getEventsByArtistName(artistName);
-    return res.status(events.status).json(events.message);
+    return res.status(200).json(events.message);
 
   } catch (error) {
 
@@ -91,7 +91,7 @@ exports.updateEvent = async (req, res) => {
     const loggedInUser = req.user;
 
     const result = await EventService.updateEvent(id, eventData, loggedInUser);
-    return res.status(result.status).json(result.message);
+    return res.status(200).json(result.message);
 
   } catch (error) {
     console.error(error);
@@ -114,7 +114,7 @@ exports.deleteEvent = async (req, res) => {
   try {
 
     const result = await EventService.deleteEvent(id, loggedInUser);
-    return res.status(result.status).json(result.message);
+    return res.status(200).json(result.message);
 
   } catch (error) {
     console.error(error);
