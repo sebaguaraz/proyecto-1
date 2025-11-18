@@ -16,7 +16,7 @@
             <div class="content-logo">
                 <img src="img/logo-musica.jpg" class="logo" alt="Logo Conexión Musical">
             </div>
-            <h1 class="title">Conexión Musical</h1>
+            <h1 class="title">Panel de Artista</h1>
             <ul class="nav-links">
                 <li>
                     <button class="logout-button">
@@ -78,97 +78,76 @@
                     </a>
                 </header>
 
-                <div class="table-responsive">
-                    <table class="data-table" id="eventTable">
-                        <thead>
-                            <tr class="header-row">
-                                <th colspan="1">Eventos</th>
-                                <th colspan="7">Detalles</th>
-                                <th colspan="2">Acciones</th>
-                            </tr>
-                            <tr>
-                                <th>Título</th>
-                                <th>Artista</th>
-                                <th>Modo de entrada</th>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Ubicación</th>
-                                <th>Precio</th>
-                                <th>Flyer url</th>
-                                <th colspan="2">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="eventTableBody">
-                            <tr class="no-records-row">
-                                <td colspan="8">No hay eventos registrados</td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
+                <div class="data-table" id="eventTableBody">
+
                 </div>
-            </section>
 
 
-            <form id="editEventForm" class="event-form oculto">
-                <div class="form-row">
+                <form id="editEventForm" class="event-form oculto">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <span id="eventIdForm"></span>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="editEventTitle">Título del Evento (*)</label>
+                            <input type="text" id="editEventTitle" name="eventTitle" placeholder="Nombre del evento"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editEventDate">Fecha (*)</label>
+                            <input type="date" id="editEventDate" name="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEventTime">Hora (*)</label>
+                            <input type="time" id="editEventTime" name="eventTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEntryMode">Modo de entrada (*)</label>
+                            <select id="editEntryMode" name="entryMode" required>
+                                <option value="">Seleccionar modo</option>
+                                <option value="gratuito">Gratuito</option>
+                                <option value="gorra">Gorra</option>
+                                <option value="beneficio">Beneficio</option>
+                                <option value="arancelado">Arancelado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editLocation">Ubicación (*)</label>
+                            <input type="text" id="editLocation" name="location"
+                                placeholder="Ej: Parque Central o Nombre del Bar" required>
+                        </div>
+                        <div class="form-group" id="editPriceGroup">
+                            <label for="editPrice">Precio (USD)</label>
+                            <input type="number" id="editPrice" name="price" step="0.01" min="0">
+                        </div>
+                    </div>
+
                     <div class="form-group full-width">
-                        <label for="editEventTitle">Título del Evento (*)</label>
-                        <input type="text" id="editEventTitle" name="eventTitle" placeholder="Nombre del evento"
-                            required>
+                        <label for="editFlyerUrl">URL del Flyer/Imagen promocional</label>
+                        <input type="url" id="editFlyerUrl" name="flyerUrl"
+                            placeholder="https://example.com/imagen.jpg">
                     </div>
-                </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editEventDate">Fecha (*)</label>
-                        <input type="date" id="editEventDate" name="eventDate" required>
+                    <div class="form-actions full-width">
+                        <button type="submit" class="btn-submit">Actualizar Evento</button>
+                        <button type="button" id="cancelEditButton" class="btn-cancel">Cancelar</button>
                     </div>
-                    <div class="form-group">
-                        <label for="editEventTime">Hora (*)</label>
-                        <input type="time" id="editEventTime" name="eventTime" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editEntryMode">Modo de entrada (*)</label>
-                        <select id="editEntryMode" name="entryMode" required>
-                            <option value="">Seleccionar modo</option>
-                            <option value="gratuito">Gratuito</option>
-                            <option value="gorra">Gorra</option>
-                            <option value="beneficio">Beneficio</option>
-                            <option value="arancelado">Arancelado</option>
-                        </select>
-                    </div>
-                </div>
+                </form>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="editLocation">Ubicación (*)</label>
-                        <input type="text" id="editLocation" name="location"
-                            placeholder="Ej: Parque Central o Nombre del Bar" required>
-                    </div>
-                    <div class="form-group" id="editPriceGroup">
-                        <label for="editPrice">Precio (USD)</label>
-                        <input type="number" id="editPrice" name="price" step="0.01" min="0">
-                    </div>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="editFlyerUrl">URL del Flyer/Imagen promocional</label>
-                    <input type="url" id="editFlyerUrl" name="flyerUrl" placeholder="https://example.com/imagen.jpg">
-                </div>
-
-                <div class="form-actions full-width">
-                    <button type="submit" class="btn-submit">Actualizar Evento</button>
-                    <button type="button" id="cancelEditButton" class="btn-cancel">Cancelar</button>
-                </div>
-            </form>
-
+            </section>
 
         </main>
     </div>
 
 
     <footer>
-        <p>© 2024 Conexión Musical. Todos los derechos reservados.</p>
+        <p>© 2025 Conexión Musical. Todos los derechos reservados.</p>
     </footer>
 
     <script src="js/EventCRUD_Dashboard.js"></script>

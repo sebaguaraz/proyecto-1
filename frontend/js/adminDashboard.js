@@ -207,9 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-
-
-
     const deleteUser = async (event) => {
         const id = event.target.value;
 
@@ -243,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             message.textContent = 'Error al eliminar el artista';
         }
     }
-
 
     showArtistsButton.addEventListener("click", loadArtists)
 
@@ -378,10 +374,10 @@ document.addEventListener('DOMContentLoaded', () => {
             title.textContent = event.title || "N/A";
             artist_name.textContent = event.name || "N/A";
             entry_modes.textContent = event.entry_mode || "N/A";
-            date.textContent = event.date || "N/A";
+            date.textContent = new Date(event.date).toLocaleDateString() || "N/A";
             time.textContent = event.time || "N/A";
             location.textContent = event.location || "N/A";
-            price.textContent = event.price || "N/A";
+            price.textContent = `$ ${event.price}` || "N/A";
 
 
             actionDelete.textContent = "Eliminar";
@@ -473,8 +469,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handlerSubmitEvent(event) {
         id = event.target.id;
         editEventForm.classList.remove("oculto");
-        
-        
+
+
         const eventIdForm = document.getElementById("eventIdForm");
         eventIdForm.textContent = `ID Evento # ${id}`;
 
@@ -505,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(`/api/events/${id}`, objetInit);
-            
+
             // Para UPDATE exitoso, 204 significa "No Content" - éxito
             if (response.status === 204) {
                 message.classList.add("message-success");
@@ -515,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            
+
             if (!response.ok) {
                 const errorMessage = data.message || "Error al actualizar evento";
                 message.classList.add("message-error");

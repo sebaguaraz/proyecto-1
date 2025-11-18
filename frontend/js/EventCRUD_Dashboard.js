@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const eventTableBody = document.getElementById("eventTableBody");
 
     const Event_form = document.getElementById("editEventForm");
+    const eventIdForm = document.getElementById("eventIdForm");
 
     const cancelEditButton = document.getElementById("cancelEditButton");
 
@@ -66,30 +67,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         eventTableBody.textContent = "";
 
         if (data.length === 0) {
-            const MessageRow = document.createElement("tr")
-            const messageCell = document.createElement("td")
-            messageCell.textContent = "No hay eventos registrados"
-            MessageRow.appendChild(messageCell)
-            eventTableBody.appendChild(MessageRow)
+            const MessageRow = document.createElement("div")
+            const messageCell = document.createElement("span")
+            messageCell.classList.add("no-records-row");
+            messageCell.textContent = "No hay eventos registrados";
+            MessageRow.appendChild(messageCell);
+            eventTableBody.appendChild(MessageRow);
             // Asegurarse de que el formulario de edición esté oculto cuando no hay eventos
-            if (Event_form) Event_form.classList.add("oculto");
-            return
+            return;
 
         }
         data.forEach(event => {
 
-            let tr = document.createElement("tr");
-            let tittleRow = document.createElement("th");
-            let artistRow = document.createElement("th");
-            let entry_modeRow = document.createElement("th");
-            let dateRow = document.createElement("th");
-            let timeRow = document.createElement("th");
-            let locationRow = document.createElement("th");
-            let priceRow = document.createElement("th");
-            let flyerRow = document.createElement("th");
-
-            let button_editRow = document.createElement("th");
-            let button_deleteRow = document.createElement("th");
+            let row = document.createElement("div");
+            row.classList.add("event-row");
+            let tittleRow = document.createElement("h3");
+            let artistRow = document.createElement("span");
+            let entry_modeRow = document.createElement("div");
+            let dateRow = document.createElement("div");
+            let timeRow = document.createElement("div");
+            let locationRow = document.createElement("div");
+            let priceRow = document.createElement("div");
+            let flyerRow = document.createElement("div");
+            flyerRow.classList.add("flyer-cell");
+            const flyerImg = document.createElement("img");
+            flyerImg.classList.add("flyer-img");
 
             let button_edit = document.createElement("button");
             let button_delete = document.createElement("button");
@@ -97,14 +99,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-            tittleRow.textContent = event.title;
-            artistRow.textContent = event.name;
-            entry_modeRow.textContent = event.entry_mode;
-            dateRow.textContent = new Date(event.date).toLocaleDateString();
-            timeRow.textContent = event.time;
-            locationRow.textContent = event.location;
-            priceRow.textContent = `$ ${Number(event.price)}`;
-            flyerRow.textContent = event.flyer_url;
+            tittleRow.textContent = `Título: ${event.title || "N/A"}`;
+            artistRow.textContent = `Artista: ${event.name || "N/A"}`;
+            entry_modeRow.textContent = `Modo de entrada: ${event.entry_mode || "N/A"}`;
+            dateRow.textContent = `Fecha: ${new Date(event.date).toLocaleDateString() || "N/A"}`;
+            timeRow.textContent = `Hora: ${event.time || "N/A"}`;
+            locationRow.textContent = `Ubicación: ${event.location || "N/A"}`;
+            priceRow.textContent = `Precio: $${Number(event.price) || "N/A"}`;
+            flyerImg.src = `${event.flyer_url || "N/A"}`;
 
             button_edit.textContent = "Editar";
             button_edit.className = "action-button edit-btn";
@@ -113,21 +115,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             button_delete.className = "action-button delete-btn";
             button_delete.id = event.id;
 
-            tr.appendChild(tittleRow);
-            tr.appendChild(artistRow);
-            tr.appendChild(entry_modeRow);
-            tr.appendChild(dateRow);
-            tr.appendChild(timeRow);
-            tr.appendChild(locationRow);
-            tr.appendChild(priceRow);
-            tr.appendChild(flyerRow);
+            row.appendChild(flyerRow);
+            flyerRow.appendChild(flyerImg);
+            row.appendChild(tittleRow);
+            row.appendChild(artistRow);
+            row.appendChild(priceRow);
+            row.appendChild(entry_modeRow);
+            row.appendChild(locationRow);
+            row.appendChild(dateRow);
+            row.appendChild(timeRow);
 
-            button_editRow.appendChild(button_edit);
-            button_deleteRow.appendChild(button_delete);
-
-            tr.appendChild(button_editRow);
-            tr.appendChild(button_deleteRow);
-            eventTableBody.appendChild(tr);
+            row.appendChild(button_edit);
+            row.appendChild(button_delete);
+            eventTableBody.appendChild(row);
 
 
 
@@ -152,8 +152,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 3. Mostramos el formulario explícitamente
         if (Event_form) {
             Event_form.classList.remove("oculto");
-            // Reemplazamos el handler anterior para evitar listeners duplicados
-            Event_form.onsubmit = (e) => handleFormSubmit(e, id);
+            eventIdForm.textContent = `ID Evento: # ${id}`;
+
+            Event_form.addEventListener("submit", (e) => handleFormSubmit(e,id));
         }
 
     }

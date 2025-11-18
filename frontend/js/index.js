@@ -13,9 +13,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         eventTableBody.textContent = ""
 
         if (event.length === 0) {
-            const MessageRow = document.createElement("tr")
-            const messageCell = document.createElement("td")
+            const MessageRow = document.createElement("div")
+            const messageCell = document.createElement("span")
             messageCell.textContent = "No hay evento registrado"
+            messageCell.classList.add("total")
             MessageRow.appendChild(messageCell)
             eventTableBody.appendChild(MessageRow)
             return;
@@ -23,47 +24,50 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
         event.forEach(ev => {
-            const EventRow = document.createElement("tr");
-            const idCell = document.createElement("td");
-            const titleCell = document.createElement("td");
-            const artistCell = document.createElement("td");
-            // const artist_a = document.createElement("a");
+            const EventRow = document.createElement("div");
+            EventRow.classList.add("event-row");
+            const FlyerCell = document.createElement("div");
+            FlyerCell.classList.add("flyer-cell");
+            const flyer_img = document.createElement("img");
+            flyer_img.classList.add("flyer-img");
 
-            const Entry_ModeCell = document.createElement("td");
-            const DateCell = document.createElement("td");
-            const TimeCell = document.createElement("td");
-            const LocationCell = document.createElement("td");
-            const PriceCell = document.createElement("td");
-            const FlyerCell = document.createElement("td");
-
-            idCell.textContent = ev.id || "N/A";
-            titleCell.textContent = ev.title;
-
-            // artist_a.href = `/profileArtist/${ev.artist_id}`;
-            // artist_a.textContent = ev.name;
-            artistCell.textContent = ev.name;
-            Entry_ModeCell.textContent = ev.entry_mode;
-            DateCell.textContent = new Date(ev.date).toLocaleDateString();
-            TimeCell.textContent = ev.time;
-            LocationCell.textContent = ev.location;
-            PriceCell.textContent = ev.price || "N/A";
-            FlyerCell.textContent = ev.flyer_url || "N/A";
+            const idCell = document.createElement("span");
+            const titleCell = document.createElement("h3");
+            const artistCell = document.createElement("span");
             
+            const PriceCell = document.createElement("div");
+            const Entry_ModeCell = document.createElement("div");
 
-            EventRow.appendChild(idCell);
-            EventRow.appendChild(titleCell);
+            const LocationCell = document.createElement("div");
+            const DateCell = document.createElement("div");
+            const TimeCell = document.createElement("div");
+
+            flyer_img.src = ev.flyer_url || "";
+            idCell.textContent = `ID: # ${ev.id || "N/A"}`;
+            titleCell.textContent = `Título: ${ev.title}`;
+            artistCell.textContent = `Artista: ${ev.name}`;
+            PriceCell.textContent = `Precio: $ ${ev.price || "N/A"}`;
+            Entry_ModeCell.textContent = `Modo de entrada: ${ev.entry_mode}`;
+            LocationCell.textContent = `Ubicación: ${ev.location}`;
+            DateCell.textContent = `Fecha: ${new Date(ev.date).toLocaleDateString()}`;
+            TimeCell.textContent = `Hora: ${ev.time}` || "N/A";
+
+            
             
             // artistCell.appendChild(artist_a);
             // EventRow.appendChild(artistCell);
-
-            EventRow.appendChild(artistCell);
-            EventRow.appendChild(Entry_ModeCell);
-            EventRow.appendChild(DateCell);
+            
             EventRow.appendChild(TimeCell);
+            EventRow.appendChild(DateCell);
             EventRow.appendChild(LocationCell);
+            EventRow.appendChild(Entry_ModeCell);
             EventRow.appendChild(PriceCell);
+            EventRow.appendChild(artistCell);
+            EventRow.appendChild(titleCell);
+            EventRow.appendChild(idCell);
+            FlyerCell.appendChild(flyer_img);
             EventRow.appendChild(FlyerCell);
-
+            
             eventTableBody.appendChild(EventRow);
         });
 

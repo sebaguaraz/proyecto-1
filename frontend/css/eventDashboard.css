@@ -1,4 +1,3 @@
-
 .content-logo {
     display: flex;
     border: 1px solid black;
@@ -6,7 +5,7 @@
     width: 80px;
     height: 80px;
     overflow: hidden;
-    box-shadow: 8px 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 6px 4px 8px rgba(236, 236, 236, 0.486);
 }
 
 
@@ -62,7 +61,14 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    background-color: #686470;
+    background-color: #000000;
+
+
+
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 4px 2px 4px rgba(0, 0, 0, 0.1);
     /* padding: 20px 0; */
     /* background-color: rgba(255, 255, 255, 0.9); */
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
@@ -72,7 +78,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 30px auto 0px auto;
+    margin: 20px auto 0px auto;
     gap: 20px;
     width: 88%;
     align-items: center;
@@ -92,7 +98,7 @@
     font-size: 40px;
     width: 100%;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 7px;
     color: #ffffff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -123,7 +129,6 @@
     width: 90%;
     align-items: center;
     background-color: rgba(209, 49, 49, 0);
-    border-radius: 15px;
     /* padding: 30px; */
     box-shadow: 12px 20px 20px rgba(0, 0, 0, 0.603);
     margin-top: 30px;
@@ -135,54 +140,31 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-/* Estilos para la tabla */
-table {
+.events_header {
+
+    display: flex;
+    flex-direction: row;
     width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    overflow: hidden;
-    /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); */
+    flex: 1;
+    align-items: center;
+    padding: 20px;
+
+
 }
 
-th,
-td {
-    border: 1px solid #3f161600;
-    padding: 12px;
-    border-bottom: 1px solid rgba(168, 163, 163, 0.342);
-    text-align: center;
-}
-
-th {
-    background-color: #493fa1bd;
-    font-weight: bold;
-    color: white;
-    font-size: 18px;
-}
-
-td {
-    background-color: rgba(255, 255, 255, 0.9);
-}
-
-tr:hover td {
-    background-color: #d8d4d4;
-    transition: background-color 0.2s ease;
-}
 
 .total {
     display: flex;
     flex-direction: column;
     align-items: start;
     justify-content: center;
-    background-color: #e9ecef;
     font-weight: bold;
+    padding: 20px;
 }
 
-.total td {
-    background-color: #e9ecef;
-    font-size: 18px;
-}
 
 .entry_mode {
     border-radius: 12%;
@@ -190,7 +172,6 @@ tr:hover td {
     border: 1px solid #3f161600;
     padding: 5px;
     font-size: 18px;
-    font-weight: bold;
     color: rgb(148, 143, 143);
 }
 
@@ -199,22 +180,23 @@ tr:hover td {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    /* width: 100%; */
+    flex: 1;
     align-items: center;
 }
 
-.form-group button{
+.form-group button {
 
     margin-left: 20px;
     border: 1px solid #635e5e;
     padding: 8px 15px;
     background-color: transparent;
     color: white;
-    border-radius: 12px ;
+    border-radius: 12px;
 }
 
-.header-row th {
-    background-color: #453b64;
+.header-row {
+    background-color: #000000;
     color: rgb(148, 143, 143);
     font-size: 20px;
 }
@@ -229,28 +211,24 @@ tr:hover td {
     transition: all 0.3s ease;
 }
 
-.action-button:hover {
-    background-color: #0056b3;
-}
 
 .search-input {
     padding: 8px 15px;
     border: 1px solid #635e5e;
     background-color: transparent;
     border-radius: 5px;
-    /* color: white; */
+    color: white;
     width: 100%;
 }
 
 .search-form {
-    position: relative;
     display: flex;
     align-items: center;
+    flex-direction: row;
+    gap: 12px;
 }
 
 .search-form button {
-    position: absolute;
-    right: 0;
     border: none;
     border-left: 1px solid rgba(168, 163, 163, 0.342);
     background-color: transparent;
@@ -258,4 +236,45 @@ tr:hover td {
     color: #ffffff;
 }
 
+.event-row {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.678);
+    /* border-radius: 20px; */
+    box-shadow: 8px 2px 10px rgba(0, 0, 0, 0.39);
+    margin: 10px;
+    height: 500px;
+    width: 300px;
+    padding: 5px;
+    padding-bottom: 5px;
+}
 
+.event-row:hover {
+    background-color: #d7d5db;
+}
+
+.flyer-cell {
+
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.flyer-img {
+    width: 100%;
+    height: 100%;
+}
+
+.events_body {
+
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    padding: 20px;
+
+
+}

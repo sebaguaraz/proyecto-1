@@ -32,61 +32,43 @@
 
     <main class="main-content">
         <section class="events-content">
-            <div class="events-table">
-                <table id="eventTable">
-                    <thead>
-                        <tr class="header-row">
-                            <th colspan="1">Eventos</th>
-                            <!-- <th colspan="2">
+            <div class="events-table" id="eventTable">
+                <div class="events_header header-row">
+
+                    <span style="display: flex; flex:1; justify-content: center">Eventos</span>
+                    <!-- <div colspan="2">
                                 <button class="action-button" id="createEvent">Crear Evento</button>
-                            </th> -->
-                            <th colspan="3">
-                                <form class="form-group" id="form-entry_mode">
-                                    <label for="entry_mode" style="color: rgb(148, 143, 143); margin-bottom: 4px;">Modo
-                                        de entrada</label>
-                                    <select id="entry_mode" name="entry_mode" class="entry_mode">
-                                        <option value="1">gratuito</option>
-                                        <option value="2">gorra</option>
-                                        <option value="3">beneficio</option>
-                                        <option value="4">arancelado</option>
-                                    </select>
-                                    <button type="submit">
-                                        Filtrar
-                                    </button>
-                                </form>
-                            </th>
+                            </div> -->
 
-                            <th colspan="7">
-                                <form class="search-form" id="search-form">
-                                    <label for="name_event"></label>
-                                    <input type="text" class="search-input" id="name_event" name="name_event"
-                                        placeholder="Buscar por nombre del artista...">
-                                    <button type="submit">Buscar</button>
+                    <form class="form-group" id="form-entry_mode">
+                        <label for="entry_mode" style="color: rgb(148, 143, 143); margin-bottom: 4px;">Modo
+                            de entrada</label>
+                        <select id="entry_mode" name="entry_mode" class="entry_mode">
+                            <option value="1">gratuito</option>
+                            <option value="2">gorra</option>
+                            <option value="3">beneficio</option>
+                            <option value="4">arancelado</option>
+                        </select>
+                        <button type="submit">
+                            Filtrar
+                        </button>
+                    </form>
 
-                                </form>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>#</th>
-                            <th>Título</th>
-                            <th>Artista</th>
-                            <th>Modo de entrada</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Ubicación</th>
-                            <th>Precio</th>
-                            <th>Flyer url</th>
-                        </tr>
-                    </thead>
-                    <tbody id="eventTableBody">
+                    <form class="search-form" id="search-form" style="display: flex; flex: 1;">
+                        <label for="name_event"></label>
+                        <input type="text" class="search-input" id="name_event" name="name_event"
+                            placeholder="Buscar por nombre del artista...">
+                        <button type="submit">Buscar</button>
+
+                    </form>
+
+                </div>
+                
+                <div id="eventTableBody" class="events_body">
 
 
-                        <tr class="total">
-                            <td colspan="10">No hay eventos registrados </td>
-                        </tr>
+                </div>
 
-                    </tbody>
-                </table>
             </div>
         </section>
 
