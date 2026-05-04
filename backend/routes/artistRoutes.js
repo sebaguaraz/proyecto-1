@@ -32,31 +32,10 @@ router.get("/profile/:id", protect, authorize(["admin","artist"]), artistControl
 // router.get("/profile/:id", artistController.getArtistProfile);
 
 
-// 2. Ruta para ACTUALIZAR (modificar) el perfil de un artista específico.
-// Tipo de Petición: PUT (se usa para actualizar completamente un recurso, o PATCH para actualización parcial)
-// URL: /api/artists/profile/:id
-// - ':id' es el user_id del artista cuyo perfil se va a actualizar.
-//   Los datos a actualizar se envían en el cuerpo de la petición (req.body).
-//
-// Flujo:
-// - Primero, 'protect' se ejecuta: Asegura que el usuario esté autenticado.
-// - Si 'protect' pasa, entonces 'artistController.updateArtistProfile' se ejecuta:
-//   Contiene la lógica para actualizar los datos del perfil en la DB, y las comprobaciones de seguridad
-//   (si el usuario logueado tiene permiso para modificar ese perfil).
+
 router.put("/profile/:id", protect, authorize(["artist", "admin"]),artistController.updateArtistProfile);
 
 
-// 3. Ruta para OBTENER TODOS los perfiles de artistas.
-// Tipo de Petición: GET
-// URL: /api/artists/all
-// Esta ruta es útil para un panel de administración donde se quiera listar todos los artistas.
-//
-// Flujo:
-// - Primero, 'protect' se ejecuta: Asegura que el usuario esté autenticado.
-// - Luego, 'authorize(["admin"])' se ejecuta: Verifica que el usuario autenticado tenga el rol de 'admin'.
-//   Si no es 'admin', deniega el acceso. Solo si es 'admin' la petición continúa.
-// - Si 'authorize' pasa, entonces 'artistController.findAll' se ejecuta:
-//   Contiene la lógica para obtener todos los perfiles de artistas de la base de datos y enviarlos.
 router.get("/all", protect, authorize(["admin"]), artistController.findAll);
 
 

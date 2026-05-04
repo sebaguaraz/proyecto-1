@@ -62,17 +62,3 @@ exports.login = async (username, password) => {
 
 };
 
-/**
- * Nota para el programador (esto no es para el niño, jeje):
- *
- * bcryptjs: Es una librería que usamos para transformar las contraseñas en códigos secretos
- * (hashear) antes de guardarlas. Así, si alguien roba nuestra base de datos,
- * no podrá ver las contraseñas reales. También la usamos para verificar
- * si una contraseña escrita es la correcta sin tener que "deshacer" el código secreto.
- *
- * jsonwebtoken (jwt): Es una librería para crear y leer "pasaportes digitales" (JWTs).
- * Estos pasaportes nos ayudan a saber que un usuario ha iniciado sesión
- * y puede hacer cosas en nuestra aplicación sin tener que pedirle la
- * contraseña una y otra vez. Son seguros porque llevan un "sello secreto"
- * que solo el servidor puede verificar.
- */
