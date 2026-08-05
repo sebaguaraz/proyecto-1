@@ -28,7 +28,7 @@ class EventRepository {
       artist_id,
       entry_modes_id,
       title,
-      date, 
+      date,
       time,
       location,
       price,
@@ -57,8 +57,8 @@ class EventRepository {
     WHERE entry_modes.id = ? ORDER BY date DESC`;
     const [results] = await db.query(query, [entrada]);
     return results || [];
-  };  
-  
+  };
+
   async findById(id) {
 
     const query = `SELECT 
@@ -149,7 +149,7 @@ class EventRepository {
     const [result] = await db.query(query, [id]);
     return result.affectedRows > 0 ? result : null;
   };
-  
+
 };
 
 module.exports = new EventRepository();

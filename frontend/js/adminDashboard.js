@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const editEventForm = document.getElementById("editEventForm");
 
-
     // Verificar autenticación y rol
     const token = sessionStorage.getItem('token');
     const userRole = sessionStorage.getItem('userRole');
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }, 4000)
     }
-
 
     usernameDisplay.textContent = username;
     usernameDisplay.style.fontSize = "30px";
@@ -68,13 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             displayArtists(users);
 
-
         } catch (error) {
             console.error("Error de conexion al mostrar los artistas", error)
 
         }
-
-
 
     }
 
@@ -125,8 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
             row.appendChild(role);
             row.appendChild(actionsCell);
             artistTableBody.appendChild(row);
-
-
 
             addActionListeners(editButton, deleteButton);
         })
@@ -478,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
         editEventForm.addEventListener("submit", (event) => updateEventSubmit(id, event));
 
     }
-
 
 
     async function updateEventSubmit(id, event) {

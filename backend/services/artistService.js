@@ -5,7 +5,7 @@ const ArtistRepository = require("../repositories/Artist");
 async function getArtistProfile(userId, requester) {
     const { requesterId, requesterRole, requesterName } = requester;
 
-    if (requesterRole !== "admin" || userId !== requesterId) {
+    if (requesterRole !== "admin" && userId !== requesterId) {
         throw { status: 403, message: "No tienes permiso para ver este perfil." };
     }
 
@@ -39,7 +39,7 @@ async function updateArtistProfile(userId, requester, data) {
 }
 
 async function findAll(requester) {
-    const {requesterId, requesterRole, requesterName} = requester;
+    const { requesterId, requesterRole, requesterName } = requester;
 
     if (requesterRole !== "admin") {
         throw { status: 403, message: "Acceso denegado. Solo administradores pueden ver todos los perfiles." };

@@ -59,6 +59,5 @@ exports.login = async (username, password) => {
 
     return { token, role: usuarioExistente.role, userId: usuarioExistente.id, username: usuarioExistente.username };
 
-
 };
 

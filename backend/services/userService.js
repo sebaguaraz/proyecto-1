@@ -16,7 +16,9 @@ exports.getUserById = async (id) => {
     if (!user) {
         throw { status: 404, message: "Usuario no encontrado" };
     }
-    return { status: 200, data: user };
+
+    const { password, ...userWithoutPassword } = user;
+    return { status: 200, data: userWithoutPassword };
 
 };
 

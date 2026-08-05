@@ -6,10 +6,10 @@ const eventController = require("../controllers/eventController");
 const router = express.Router();
 
 router.get("/allEvents", eventController.getAllEvents)
-// aca debe obtener evento por modo de entrada(id)
-router.get("/:entrada", eventController.getEventById)
-// modoficar para obtener evento por nombre de artista
+// buscar eventos por nombre de artista antes de la ruta dinámica
 router.get("/eventByArtist/:artistName", eventController.getEventsByArtistName)
+// obtener evento por modo de entrada (id)
+router.get("/:entrada", eventController.getEventById)
 
 router.post("/", protect, authorize(["artist"]), eventController.createEvent)
 

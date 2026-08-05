@@ -10,7 +10,7 @@ router.get("/", protect, authorize(["admin"]), userController.getAllUsers);
 router.get("/:id", protect, authorize(["admin"]), userController.getUserById);
 
 // Ruta para actualizar un usuario (protegida)
-router.put("/:id", protect, authorize(["admin"]), userController.updateUser); 
+router.put("/:id", protect, authorize(["admin"]), userController.updateUser);
 
 // Ruta para eliminar un usuario (protegida)
 router.delete("/:id", protect, authorize(["admin"]), userController.deleteUser);

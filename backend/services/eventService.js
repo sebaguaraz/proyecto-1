@@ -46,9 +46,6 @@ exports.createEvent = async (eventData, loggedInUser) => {
 
     return { message: "Evento creado con éxito" };
 
-
-
-
 };
 
 // --- FUNCIÓN PARA OBTENER TODOS LOS EVENTOS ---
@@ -56,10 +53,8 @@ exports.createEvent = async (eventData, loggedInUser) => {
 exports.getAllEvents = async () => {
 
     const events = await EventRepository.findAll();
-    if (!events || events.length === 0) throw { status: 204, message: "No se encontraron eventos." };
 
-    return { message: events };
-
+    return { message: events || [] };
 
 };
 
@@ -90,7 +85,6 @@ exports.getEventsByArtistName = async (artistName) => {
     return { message: events };
 
 
-
 };
 
 // --- FUNCIÓN PARA ACTUALIZAR UN EVENTO ---
@@ -102,7 +96,7 @@ exports.updateEvent = async (id, eventData, loggedInUser) => {
     // Primero, buscar el evento para verificar existencia y permisos.
     const eventExists = await EventRepository.findById(id);
 
-    if (!eventExists) throw { status: 204, message: "Evento no encontrado." };
+    if (!eventExists) throw { status: 404, message: "Evento no encontrado." };
 
     const entry_mode = await Entry_ModeRepository.findByName(eventData.entryMode);
 
@@ -160,8 +154,6 @@ exports.updateEvent = async (id, eventData, loggedInUser) => {
         throw { status: 403, message: "No tienes permisos para actualizar eventos." };
     }
 
-
-
 };
 
 // --- FUNCIÓN PARA ELIMINAR UN EVENTO ---
@@ -200,8 +192,5 @@ exports.deleteEvent = async (id, loggedInUser) => {
 
         return { message: "Evento eliminado con éxito." };
     }
-
-
-
 
 };

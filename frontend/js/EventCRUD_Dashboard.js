@@ -134,8 +134,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             button_delete.addEventListener("click", (event) => deleteEvent(event));
             button_edit.addEventListener("click", (event) => showFormEditEvent(event));
 
-
-
         })
     }
 
@@ -154,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Event_form.classList.remove("oculto");
             eventIdForm.textContent = `ID Evento: # ${id}`;
 
-            Event_form.addEventListener("submit", (e) => handleFormSubmit(e,id));
+            Event_form.addEventListener("submit", (e) => handleFormSubmit(e, id));
         }
 
     }
@@ -176,8 +174,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // 4. ¡Ahora sí! Llamamos a la función de actualización y esperamos su resultado
         await updateEvent(id, data);
-
-
 
     }
 
@@ -211,10 +207,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert(error.message); // Mostramos un error más claro al usuario
         }
     }
-
-
-
-
 
 
     async function deleteEvent(event) {
@@ -255,24 +247,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-
-
-
-
     cancelEditButton.addEventListener("click", () => {
         Event_form.classList.toggle("oculto");
         Event_form.reset();
 
     })
-
-
-
-
-
-
-
-
-
 
     logoutButton.addEventListener("click", function () {
 
@@ -282,7 +261,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         sessionStorage.removeItem("userId")
         alert("Usted ah Cerrado Sesión, Redirigiendo...")
         window.location.href = "index.html"
-
 
     })
 

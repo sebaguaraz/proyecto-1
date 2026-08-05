@@ -94,14 +94,12 @@ exports.updateEvent = async (req, res) => {
     return res.status(200).json(result.message);
 
   } catch (error) {
+
     console.error(error);
     const status = error && error.status ? error.status : 500;
     const message = error && error.message ? error.message : "Error interno del servidor al actualizar el evento.";
     return res.status(status).json({ message });
   }
-
-
-
 
 };
 
@@ -122,6 +120,5 @@ exports.deleteEvent = async (req, res) => {
     const message = error && error.message ? error.message : "Error interno del servidor al eliminar el evento.";
     return res.status(status).json({ message });
   }
-
 
 };

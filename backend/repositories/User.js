@@ -84,7 +84,7 @@ class UserRepository {
 
     return result.affectedRows > 0 ? result : null
   };
-  
+
 };
 
 /* En resumen: Este archivo importa la conexión a la base de datos (db) y la herramienta para hashear contraseñas (bcrypt). Luego, define un objeto User que contendrá todas las operaciones específicas para la tabla users y lo exporta para que los controladores puedan usarlo.*/
